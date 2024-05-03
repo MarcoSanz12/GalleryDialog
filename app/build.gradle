@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.marcosanz.gallerydialog'
+    namespace 'com.marcosanz.app'
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.marcosanz.gallerydialog"
+        applicationId "com.marcosanz.app"
         minSdk 24
         targetSdk 34
         versionCode 1
@@ -49,8 +49,7 @@ dependencies {
     implementation libs.androidx.constraintlayout
     implementation libs.google.flexbox
     testImplementation libs.junit
-    implementation libs.gallerydialog
-    //implementation project(path: ':gallerydialog')
+    implementation project(path: ':gallerydialog')
 
     androidTestImplementation libs.androidx.junit
     androidTestImplementation libs.androidx.espresso.core

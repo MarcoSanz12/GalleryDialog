@@ -1,9 +1,7 @@
 [versions]
 agp = "8.3.2"
-flexbox = "2.0.1"
 flexboxVersion = "3.0.0"
 fragmentKtx = "1.6.2"
-gallerydialog = "1.0.0"
 glide = "4.16.0"
 insetter = "0.6.1"
 kotlin = "1.9.0"
@@ -27,8 +25,6 @@ androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref
 androidx-recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "recyclerview" }
 androidx-viewpager2 = { module = "androidx.viewpager2:viewpager2", version.ref = "viewpager2" }
 compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "glide" }
-flexbox = { module = "com.google.android:flexbox", version.ref = "flexbox" }
-gallerydialog = { module = "com.marcosanz:gallerydialog", version.ref = "gallerydialog" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 google-flexbox = { module = "com.google.android.flexbox:flexbox", version.ref = "flexboxVersion" }
 insetter = { module = "dev.chrisbanes.insetter:insetter", version.ref = "insetter" }

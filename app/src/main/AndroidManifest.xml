@@ -16,7 +16,7 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".SampleActivity"
+            android:name="com.marcosanz.app.SampleActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,7 +25,7 @@
         </activity>
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.marcosanz.gallerydialog"
+            android:authorities="com.marcosanz.app"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

@@ -1,14 +1,11 @@
-package com.marcosanz.gallerydialog
+package com.marcosanz.app
 
 import android.os.Bundle
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.doOnPreDraw
 import com.bumptech.glide.Glide
-import com.marcosanz.gallerydialog.databinding.ActivitySampleBinding
+import com.marcosanz.app.databinding.ActivitySampleBinding
 import com.marcosanz.gallerydialog.dialog.GalleryDialog
 import com.marcosanz.gallerydialog.dialog.GalleryDialogOptions
 import com.marcosanz.gallerydialog.entity.Image
@@ -17,18 +14,6 @@ import com.marcosanz.gallerydialog.entity.Image
 class SampleActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySampleBinding
-
-    private val windowInsetsController: WindowInsetsControllerCompat?
-        get() =
-            if (window != null) {
-                WindowCompat.getInsetsController(window, window.decorView)
-                    .apply {
-                        systemBarsBehavior =
-                            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-                    }
-            } else
-                null
-
 
     private val images = listOf(
         Image(
@@ -88,7 +73,7 @@ class SampleActivity : AppCompatActivity() {
         GalleryDialog.newInstance(
             images,
             position,
-            GalleryDialogOptions(fileProviderAuthorities = "com.marcosanz.gallerydialog")
+            GalleryDialogOptions(fileProviderAuthorities = "com.marcosanz.app")
         ).show(supportFragmentManager, "gallery_dialog")
     }
 }
