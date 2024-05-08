@@ -17,7 +17,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import androidx.core.view.doOnPreDraw
 import androidx.core.view.updatePadding
 import androidx.fragment.app.DialogFragment
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
@@ -62,6 +61,8 @@ class GalleryDialog() : DialogFragment() {
     var maxAltLines: Int = 3
 
     private lateinit var options: GalleryDialogOptions
+
+    private var initialSelection = true
 
     /**
      * Returns the visibility status of the UI (System Bars, alt text, back button, additional buttons)
@@ -115,7 +116,6 @@ class GalleryDialog() : DialogFragment() {
         setStyle(STYLE_NORMAL, R.style.GalleryDialogTheme)
 
         _ogStatusBarColor = activity?.window?.statusBarColor
-        //activity?.window?.statusBarColor = Color.BLACK
 
 
         // 1. Image list
@@ -192,25 +192,18 @@ class GalleryDialog() : DialogFragment() {
                 showMenu(v, R.menu.popop_menu_no_share)
         }
 
-        galleryAdapter = GalleryDialogAdapter(images, initialImage, ::onSingleTap, ::onDoubleTap) {
-            (view.parent as? ViewGroup)?.doOnPreDraw {
-                startPostponedEnterTransition()
-            }
-        }
+        galleryAdapter = GalleryDialogAdapter(images, ::onSingleTap, ::onDoubleTap)
 
-        binding.viewpager.run {
-            this.adapter = galleryAdapter
+        binding.viewpager.adapter = galleryAdapter
 
-            registerOnPageChangeCallback(object : OnPageChangeCallback() {
-                override fun onPageSelected(position: Int) {
-                    onImageChanged(images[position])
-                }
-            })
-            onImageChanged(images[initialImage])
-            post {
-                setCurrentItem(initialImage, false)
+        binding.viewpager.registerOnPageChangeCallback(object : OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                onImageChanged(images[position])
             }
-        }
+        })
+        binding.viewpager.setCurrentItem(initialImage, false)
+
+        startPostponedEnterTransition()
     }
 
 
@@ -218,8 +211,10 @@ class GalleryDialog() : DialogFragment() {
         _currentImage = image
         if (_isUIVisible && image.alt.isNotNullOrEmpty())
             visibleFooter()
-        else
+        else {
             invisibleFooter()
+        }
+
         updateText(image)
     }
 
@@ -340,6 +335,7 @@ class GalleryDialog() : DialogFragment() {
 
     private fun invisibleFooter() =
         binding.lyFooter.invisible(true, y = 25f)
+
 
     companion object {
         private const val TAG = "GalleryDialog"

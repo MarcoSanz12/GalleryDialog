@@ -33,14 +33,14 @@ import java.util.Locale
 
 
 internal fun View.visible(animate: Boolean = false, y: Float? = null) {
-    visibility = View.VISIBLE
+    isVisible = true
     if (animate && alpha < 1f)
         animate(duration = 0.2f, alpha = 1f, y = y)
 }
 
 internal fun View.invisible(animate: Boolean = false, y: Float? = null) {
     if (!animate)
-        visibility = View.GONE
+        isVisible = false
     else if (!isInvisible)
         animate(duration = 0.2f, alpha = 0f, y = y) {
             isVisible = false

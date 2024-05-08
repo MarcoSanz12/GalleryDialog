@@ -17,10 +17,8 @@ import com.marcosanz.gallerydialog.extension.loadFromUrl
 
 internal class GalleryDialogAdapter(
     val items: List<Image>,
-    val initialPosition: Int,
     val onSingleTap: () -> Unit,
-    val onDoubleTap: (isExpanding: Boolean) -> Unit,
-    val onInitialPicLoaded: (position: Int) -> Unit
+    val onDoubleTap: (isExpanding: Boolean) -> Unit
 ) : RecyclerView.Adapter<GalleryDialogAdapter.ViewHolder>() {
 
     companion object {
@@ -52,6 +50,7 @@ internal class GalleryDialogAdapter(
         @SuppressLint("ClickableViewAccessibility")
         fun bind(position: Int) {
             with(ItemGalleryBinding.bind(itemView)) {
+               //tvDebug.text = position.toString()
                 // 1. Imágen
                 with(ivImagen) {
                     val image = items[position]
@@ -62,9 +61,6 @@ internal class GalleryDialogAdapter(
                     loadFromUrl(url = image.url) { drw ->
                         if (drw != null)
                             loadedDrawables[position] = drw
-
-                        if (position == initialPosition)
-                            onInitialPicLoaded(position)
                     }
                     setOnDoubleTapListener(object : OnDoubleTapListener {
                         override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
