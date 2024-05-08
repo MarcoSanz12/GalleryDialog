@@ -49,12 +49,12 @@ internal fun View.invisible(animate: Boolean = false, y: Float? = null) {
 
 internal fun ImageView.loadFromUrl(
     url: String?,
-    defaultDrawable: Drawable? = null,
+    defaultBitmap: Bitmap? = null,
     onResourceReady: (Drawable?) -> Unit
 ) {
 
     if (url.isNullOrEmpty()) {
-        this.setImageDrawable(defaultDrawable)
+        this.setImageBitmap(defaultBitmap)
         return
     }
 
@@ -63,7 +63,7 @@ internal fun ImageView.loadFromUrl(
             DrawableCrossFadeFactory.Builder().setCrossFadeEnabled(true)
         )
     )
-        .error(defaultDrawable)
+        .error(defaultBitmap)
         .listener(object : RequestListener<Drawable> {
             override fun onLoadFailed(
                 e: GlideException?,
@@ -95,6 +95,7 @@ internal fun ImageView.loadFromUrl(
 
                 setImageDrawable(resource)
             }
+
 
             override fun onLoadCleared(placeholder: Drawable?) {
 

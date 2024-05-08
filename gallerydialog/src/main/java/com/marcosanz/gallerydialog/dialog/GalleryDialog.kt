@@ -117,7 +117,6 @@ class GalleryDialog() : DialogFragment() {
 
         _ogStatusBarColor = activity?.window?.statusBarColor
 
-
         // 1. Image list
         images = arguments.getParcelableArrayListCompat(ARG_IMAGES, Image::class.java)?.toList()
             ?: emptyList()
@@ -192,7 +191,7 @@ class GalleryDialog() : DialogFragment() {
                 showMenu(v, R.menu.popop_menu_no_share)
         }
 
-        galleryAdapter = GalleryDialogAdapter(images, ::onSingleTap, ::onDoubleTap)
+        galleryAdapter = GalleryDialogAdapter(images, ::onSingleTap, ::onDoubleTap, options.errorBitmap)
 
         binding.viewpager.adapter = galleryAdapter
 

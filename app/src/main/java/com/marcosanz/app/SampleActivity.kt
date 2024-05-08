@@ -3,6 +3,8 @@ package com.marcosanz.app
 import android.os.Bundle
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.graphics.drawable.toBitmapOrNull
 import androidx.core.view.doOnPreDraw
 import com.bumptech.glide.Glide
 import com.marcosanz.app.databinding.ActivitySampleBinding
@@ -17,8 +19,8 @@ class SampleActivity : AppCompatActivity() {
 
     private val images = listOf(
         Image(
-            thumbnail = "https://i.pinimg.com/474x/83/39/27/833927616d89898d489796340f122d84.jpg",
-            url = "https://i.pinimg.com/474x/83/39/27/833927616d89898d489796340f122d84.jpg",
+            thumbnail = "https://mercatsvalenciapre.grupotecopy.es/sites/default/files/custom_welcome_data/valencia-1049389_1280.jpg",
+            url = "https://mercatsvalenciapre.grupotecopy.es/sites/default/files/custom_welcome_data/valencia-1049389_1280.jpg",
             alt = "Famous spanish cantautor Guillermo Ibañez during his tour over europe\naaaaaaaaaaaaaaa\naaaaaaaaaaaaa"
         ),
         Image(
@@ -73,7 +75,13 @@ class SampleActivity : AppCompatActivity() {
         GalleryDialog.newInstance(
             images,
             position,
-            GalleryDialogOptions(fileProviderAuthorities = "com.marcosanz.app")
+            GalleryDialogOptions(
+                fileProviderAuthorities = "com.marcosanz.app",
+                errorBitmap = AppCompatResources.getDrawable(
+                    context,
+                    R.drawable.ic_launcher_background
+                )?.toBitmapOrNull()
+            )
         ).show(supportFragmentManager, "gallery_dialog")
     }
 }

@@ -1,5 +1,6 @@
 package com.marcosanz.gallerydialog.dialog
 
+import android.graphics.Bitmap
 import android.os.Parcel
 import android.os.Parcelable
 
@@ -48,14 +49,20 @@ data class GalleryDialogOptions(
     /**
      * Text shown when image download fails for any reason
      */
-    val messageErrorDownload: String? = null
-) : Parcelable {
+    val messageErrorDownload: String? = null,
+
+    /**
+     * Bitmap shown if any Image load fails
+     */
+    val errorBitmap : Bitmap? = null
+) : Parcelable{
     constructor(parcel: Parcel) : this(
         parcel.readString(),
         parcel.readString(),
         parcel.readString(),
         parcel.readString(),
-        parcel.readString()
+        parcel.readString(),
+        parcel.readParcelable(Bitmap::class.java.classLoader)
     ) {
     }
 
@@ -65,6 +72,7 @@ data class GalleryDialogOptions(
         parcel.writeString(messageDownloading)
         parcel.writeString(messageSuccessfulDownload)
         parcel.writeString(messageErrorDownload)
+        parcel.writeParcelable(errorBitmap, flags)
     }
 
     override fun describeContents(): Int {
@@ -80,5 +88,4 @@ data class GalleryDialogOptions(
             return arrayOfNulls(size)
         }
     }
-
 }

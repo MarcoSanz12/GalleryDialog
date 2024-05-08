@@ -1,6 +1,7 @@
 package com.marcosanz.gallerydialog.adapter
 
 import android.annotation.SuppressLint
+import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.GestureDetector.OnDoubleTapListener
@@ -18,7 +19,8 @@ import com.marcosanz.gallerydialog.extension.loadFromUrl
 internal class GalleryDialogAdapter(
     val items: List<Image>,
     val onSingleTap: () -> Unit,
-    val onDoubleTap: (isExpanding: Boolean) -> Unit
+    val onDoubleTap: (isExpanding: Boolean) -> Unit,
+    val errorBitmap: Bitmap?
 ) : RecyclerView.Adapter<GalleryDialogAdapter.ViewHolder>() {
 
     companion object {
@@ -50,7 +52,7 @@ internal class GalleryDialogAdapter(
         @SuppressLint("ClickableViewAccessibility")
         fun bind(position: Int) {
             with(ItemGalleryBinding.bind(itemView)) {
-               //tvDebug.text = position.toString()
+                //tvDebug.text = position.toString()
                 // 1. Imágen
                 with(ivImagen) {
                     val image = items[position]
@@ -58,7 +60,7 @@ internal class GalleryDialogAdapter(
                     maxZoom = 5f
                     isSuperZoomEnabled = true
                     Log.d(TAG, "Bind url -> ${image.url}")
-                    loadFromUrl(url = image.url) { drw ->
+                    loadFromUrl(url = image.url, defaultBitmap = errorBitmap) { drw ->
                         if (drw != null)
                             loadedDrawables[position] = drw
                     }
