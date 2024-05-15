@@ -1,5 +1,8 @@
 <resources>
     <string name="menu_share">Share</string>
     <string name="menu_download">Save</string>
-
+    <string name="saving_picture">Saving picture...</string>
+    <string name="picture_saved">Picture saved</string>
+    <string name="saving_error">A problem occurred while saving the picture</string>
+    <string name="loading_error">A problem occurred while loading the picture</string>
 </resources>

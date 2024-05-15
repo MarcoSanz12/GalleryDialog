@@ -53,7 +53,7 @@ internal class GalleryDialogAdapter(
         fun bind(position: Int) {
             with(ItemGalleryBinding.bind(itemView)) {
                 //tvDebug.text = position.toString()
-                // 1. Imágen
+                // 1. Imagen
                 with(ivImagen) {
                     val image = items[position]
                     doubleTapScale = 2f

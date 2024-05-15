@@ -1,0 +1,8 @@
+<resources>
+    <string name="menu_share">Делиться</string>
+    <string name="menu_download">Сохранять</string>
+    <string name="saving_picture">Сохранение изображения...</string>
+    <string name="picture_saved">Изображение сохранено</string>
+    <string name="saving_error">Возникла проблема при сохранении изображения.</string>
+    <string name="loading_error">Возникла проблема при загрузке изображения</string>
+</resources>

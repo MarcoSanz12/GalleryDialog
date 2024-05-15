@@ -103,6 +103,31 @@ internal fun ImageView.loadFromUrl(
         })
 }
 
+internal fun getBitmapFromUrl(
+    context: Context,
+    url: String?,
+    onBitmapLoaded: (Bitmap) -> Unit, onBitmapError: () -> Unit
+) {
+    if (url == null){
+        onBitmapError()
+        return
+    }
+
+    try {
+        Glide.with(context).asBitmap().load(url).into(object : CustomTarget<Bitmap>() {
+            override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                onBitmapLoaded(resource)
+            }
+
+            override fun onLoadCleared(placeholder: Drawable?) {}
+        })
+    } catch (ex: Exception) {
+        ex.printStackTrace()
+        onBitmapError()
+    }
+
+}
+
 internal fun Context.loadDrawable(imageUrl: String?, callback: (Bitmap?) -> Unit) {
     imageUrl ?: return
 

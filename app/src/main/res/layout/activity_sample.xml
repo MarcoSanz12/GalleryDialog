@@ -2,9 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:fitsSystemWindows="true"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
     <com.google.android.flexbox.FlexboxLayout
         android:id="@+id/ly_images"
         android:layout_width="0dp"
@@ -12,18 +13,20 @@
         app:alignItems="center"
         app:flexWrap="wrap"
         app:justifyContent="space_around"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/gl_50"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.9"
+        app:layout_constraintVertical_chainStyle="packed">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_image1"
             android:layout_width="0dp"
             android:layout_height="100dp"
             android:padding="10dp"
-            android:transitionName="image_0"
             android:scaleType="centerCrop"
+            android:transitionName="image_0"
             app:layout_flexBasisPercent="50%"
             app:layout_flexGrow="1"
             tools:src="@tools:sample/backgrounds/scenic" />
@@ -63,9 +66,80 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="CLICK ANY IMAGE"
+        android:text="IMAGES"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/ly_images" />
 
+    <com.google.android.flexbox.FlexboxLayout
+        android:id="@+id/ly_images360"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:alignItems="center"
+        app:flexWrap="wrap"
+        app:justifyContent="space_around"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/gl_50"
+        app:layout_constraintVertical_bias="0.100000024">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_image360_1"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:padding="10dp"
+            android:scaleType="centerCrop"
+            android:transitionName="image_0"
+            app:layout_flexBasisPercent="50%"
+            app:layout_flexGrow="1"
+            tools:src="@tools:sample/backgrounds/scenic" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_image360_2"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:padding="10dp"
+            android:scaleType="centerCrop"
+            app:layout_flexBasisPercent="50%"
+            app:layout_flexGrow="1"
+            tools:src="@tools:sample/backgrounds/scenic" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_image360_3"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:padding="10dp"
+            android:scaleType="centerCrop"
+            app:layout_flexBasisPercent="50%"
+            app:layout_flexGrow="1"
+            tools:src="@tools:sample/backgrounds/scenic" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_image360_4"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:padding="10dp"
+            android:scaleType="centerCrop"
+            app:layout_flexBasisPercent="50%"
+            app:layout_flexGrow="1"
+            tools:src="@tools:sample/backgrounds/scenic" />
+    </com.google.android.flexbox.FlexboxLayout>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/materialTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="IMAGES 360"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/ly_images360" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_50"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5" />
 </androidx.constraintlayout.widget.ConstraintLayout>

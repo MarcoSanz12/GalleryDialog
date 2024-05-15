@@ -16,6 +16,7 @@ android {
         consumerProguardFiles "consumer-rules.pro"
     }
 
+
     buildFeatures {
         buildConfig = true
         viewBinding = true
@@ -26,6 +27,9 @@ android {
 
     buildTypes {
         release {
+            ndk {
+                abiFilters "armeabi", "armeabi-v7a", "x86"
+            }
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -47,7 +51,6 @@ dependencies {
     implementation libs.androidx.recyclerview
     implementation libs.material.v1100
     implementation libs.androidx.viewpager2
-    implementation libs.insetter
 
     // GLIDE
     implementation libs.glide
@@ -55,15 +58,19 @@ dependencies {
 
     // TouchImageView
     implementation libs.touchImageView
+
+    // VRImageView
+    implementation libs.panoramagl
+
 }
 
 project.afterEvaluate {
-    android.libraryVariants.each {variant->
+    android.libraryVariants.each { variant ->
         publishing.publications.create(variant.name, MavenPublication) {
-                from components.findByName(variant.name)
-                groupId = 'com.marcosanz'
-                artifactId = 'gallerydialog'
-                version = '1.0.0'
+            from components.findByName(variant.name)
+            groupId = 'com.marcosanz'
+            artifactId = 'gallerydialog'
+            version = '1.0.0'
 
         }
     }

@@ -1,0 +1,8 @@
+<resources>
+    <string name="menu_share">Udział</string>
+    <string name="menu_download">Ratować</string>
+    <string name="saving_picture">Zapisywanie zdjęcia...</string>
+    <string name="picture_saved">Zdjęcie zapisane</string>
+    <string name="saving_error">Wystąpił problem podczas zapisywania obrazu</string>
+    <string name="loading_error">Wystąpił problem podczas ładowania obrazu</string>
+</resources>

@@ -1,5 +1,8 @@
 <resources>
     <string name="menu_share">Compartir</string>
     <string name="menu_download">Desa</string>
-
+    <string name="saving_picture">S\'està desant la imatge...</string>
+    <string name="picture_saved">S\'ha guardat la imatge</string>
+    <string name="saving_error">S\'ha produït un problema en desar la imatge</string>
+    <string name="loading_error">S\'ha produït un problema en carregar la imatge</string>
 </resources>

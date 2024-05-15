@@ -54,7 +54,12 @@ data class GalleryDialogOptions(
     /**
      * Bitmap shown if any Image load fails
      */
-    val errorBitmap : Bitmap? = null
+    val errorBitmap : Bitmap? = null,
+
+    /**
+     * If true, the dialog will allow orientation change and a rotation button will be shown
+     */
+    val rotation: Boolean = true
 ) : Parcelable{
     constructor(parcel: Parcel) : this(
         parcel.readString(),
@@ -62,7 +67,8 @@ data class GalleryDialogOptions(
         parcel.readString(),
         parcel.readString(),
         parcel.readString(),
-        parcel.readParcelable(Bitmap::class.java.classLoader)
+        parcel.readParcelable(Bitmap::class.java.classLoader),
+        parcel.readValue(Boolean::class.java.classLoader) as Boolean
     ) {
     }
 
@@ -73,6 +79,7 @@ data class GalleryDialogOptions(
         parcel.writeString(messageSuccessfulDownload)
         parcel.writeString(messageErrorDownload)
         parcel.writeParcelable(errorBitmap, flags)
+        parcel.writeValue(rotation)
     }
 
     override fun describeContents(): Int {
@@ -88,4 +95,5 @@ data class GalleryDialogOptions(
             return arrayOfNulls(size)
         }
     }
+
 }
