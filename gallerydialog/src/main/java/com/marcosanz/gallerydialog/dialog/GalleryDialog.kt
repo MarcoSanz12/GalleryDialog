@@ -2,6 +2,7 @@ package com.marcosanz.gallerydialog.dialog
 
 import android.app.Dialog
 import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -327,6 +328,11 @@ class GalleryDialog() : DialogFragment() {
     private fun showInfoToast(message: String?) {
         _infoToast = Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT)
         _infoToast?.show()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        throw Exception("OnConfigurationChanged has been called and is not supported. Please, check your activity AndroidManifest for android:configChanges=\"orientation|screenSize\" and remove it")
     }
 
     private fun hideUI() {

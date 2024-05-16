@@ -2,6 +2,7 @@ package com.marcosanz.gallerydialog.dialog
 
 import android.app.Dialog
 import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -105,7 +106,7 @@ class Gallery360Dialog() : DialogFragment() {
     /**
      * Restores initial configs from orientation changes
      */
-    private fun restoreInstanceState(inState : Bundle?){
+    private fun restoreInstanceState(inState: Bundle?) {
         // 1. Actionbar color
         initialActionbarColor =
             inState?.getInt(INITIAL_ACTIONBAR_COLOR) ?: activity?.window?.statusBarColor
@@ -114,6 +115,7 @@ class Gallery360Dialog() : DialogFragment() {
         initialOrientation = inState?.getInt(INITIAL_ORIENTATION)
             ?: ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         postponeEnterTransition(1000L, TimeUnit.MILLISECONDS)
@@ -131,6 +133,11 @@ class Gallery360Dialog() : DialogFragment() {
 
         orientationManager = OrientationManager(requireActivity())
         restoreInstanceState(savedInstanceState)
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        throw Exception("OnConfigurationChanged has been called and is not supported. Please, check your activity AndroidManifest for android:configChanges=\"orientation|screenSize\" and remove it")
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
