@@ -7,6 +7,7 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.GestureDetector
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -24,16 +25,19 @@ import androidx.fragment.app.DialogFragment
 import com.marcosanz.gallerydialog.R
 import com.marcosanz.gallerydialog.databinding.DlgGallery360Binding
 import com.marcosanz.gallerydialog.entity.Image
-import com.marcosanz.gallerydialog.extension.executeIfApiLessThanS
 import com.marcosanz.gallerydialog.extension.getBitmapFromUrl
 import com.marcosanz.gallerydialog.extension.getParcelableCompat
+import com.marcosanz.gallerydialog.extension.getSerializableCompat
+import com.marcosanz.gallerydialog.extension.getUIDeviceOrientation
 import com.marcosanz.gallerydialog.extension.invisible
 import com.marcosanz.gallerydialog.extension.isNotNullOrEmpty
+import com.marcosanz.gallerydialog.extension.notNull
 import com.marcosanz.gallerydialog.extension.visible
 import com.marcosanz.gallerydialog.utils.OrientationManager
 import com.panoramagl.PLImage
 import com.panoramagl.PLManager
 import com.panoramagl.PLSphericalPanorama
+import com.panoramagl.ios.enumerations.UIDeviceOrientation
 import java.util.concurrent.TimeUnit
 
 
@@ -77,7 +81,8 @@ class Gallery360Dialog() : DialogFragment() {
     private lateinit var options: Gallery360DialogOptions
 
     private var initialActionbarColor: Int? = null
-    private var initialOrientation: Int = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+    private var initialOrientation: Int
+    private var oldUIDeviceOrientation: UIDeviceOrientation
     private var hasRotationChanged = false
 
     private val windowInsetsController: WindowInsetsControllerCompat?
@@ -93,13 +98,27 @@ class Gallery360Dialog() : DialogFragment() {
 
     init {
         isCancelable = true
+
+        initialOrientation =
+            activity?.requestedOrientation ?: ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        oldUIDeviceOrientation =
+            activity.getUIDeviceOrientation() ?: UIDeviceOrientation.UIDeviceOrientationPortrait
+
         dialog?.setCanceledOnTouchOutside(false)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
+        // 1. Initial screen orientation
         outState.putInt(INITIAL_ORIENTATION, initialOrientation)
-        if (initialActionbarColor != null)
-            outState.putInt(INITIAL_ACTIONBAR_COLOR, initialActionbarColor!!)
+
+        // 2. Last UIOrientation (for sensorial rotation)
+        outState.putSerializable(OLD_UI_ORIENTATION, oldUIDeviceOrientation)
+
+        // 3. Initial actionbar color
+        initialActionbarColor.notNull {
+            outState.putInt(INITIAL_ACTIONBAR_COLOR, it)
+        }
+
         super.onSaveInstanceState(outState)
     }
 
@@ -112,8 +131,12 @@ class Gallery360Dialog() : DialogFragment() {
             inState?.getInt(INITIAL_ACTIONBAR_COLOR) ?: activity?.window?.statusBarColor
 
         // 2. Orientation
-        initialOrientation = inState?.getInt(INITIAL_ORIENTATION)
-            ?: ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        initialOrientation = inState?.getInt(INITIAL_ORIENTATION) ?: initialOrientation
+
+        // 3. UI Orientation
+        oldUIDeviceOrientation =
+            inState?.getSerializableCompat(OLD_UI_ORIENTATION, UIDeviceOrientation::class.java)
+                ?: oldUIDeviceOrientation
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -183,9 +206,17 @@ class Gallery360Dialog() : DialogFragment() {
             panorama.setImage(PLImage(bitmap))
             this.panorama = panorama
             isAcceleratedTouchScrollingEnabled = true
-            executeIfApiLessThanS {
-                if (options.sensorialRotation)
-                    startSensorialRotation()
+            activateOrientation()
+
+            if (options.sensorialRotation) {
+                val newUIDeviceOrientation = activity.getUIDeviceOrientation()
+                newUIDeviceOrientation.notNull {
+                    //updateGyroscopeRotationByOrientation(oldUIDeviceOrientation, it)
+                }
+                Log.i("DEVICE_ORIENTATION", "PanoramaGL -> $currentDeviceOrientation")
+                Log.i("DEVICE_ORIENTATION", "Old -> $oldUIDeviceOrientation\n New -> $newUIDeviceOrientation")
+                startSensorialRotation()
+                oldUIDeviceOrientation = newUIDeviceOrientation ?: oldUIDeviceOrientation
             }
         }
 
@@ -266,7 +297,6 @@ class Gallery360Dialog() : DialogFragment() {
         orientationManager.toggleOrientation()
     }
 
-
     private fun onSingleTap() {
         toggleUI()
     }
@@ -288,15 +318,12 @@ class Gallery360Dialog() : DialogFragment() {
 
     override fun onResume() {
         super.onResume()
-        executeIfApiLessThanS {
-            plManager?.onResume()
-        }
+        plManager?.onResume()
+
     }
 
     override fun onPause() {
-        executeIfApiLessThanS {
-            plManager?.onPause()
-        }
+        plManager?.onPause()
         super.onPause()
     }
 
@@ -360,6 +387,7 @@ class Gallery360Dialog() : DialogFragment() {
         private const val ARG_IMAGE = "arg_image"
         private const val ARG_OPTIONS = "arg_options"
         private const val INITIAL_ORIENTATION = "INITIAL_ORIENTATION"
+        private const val OLD_UI_ORIENTATION = "INITIAL_UI_ORIENTATION"
         private const val INITIAL_ACTIONBAR_COLOR = "INITIAL_ACTIONBAR_COLOR"
         fun newInstance(
             image: Image,

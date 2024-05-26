@@ -3,8 +3,9 @@ package com.marcosanz.gallerydialog.extension
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
+import java.io.Serializable
 
-internal fun <T : Parcelable> Bundle?.getParcelableArrayListCompat(
+internal inline fun <reified T : Parcelable> Bundle?.getParcelableArrayListCompat(
     key: String,
     clazz: Class<out T>
 ): java.util.ArrayList<T>? =
@@ -13,7 +14,7 @@ internal fun <T : Parcelable> Bundle?.getParcelableArrayListCompat(
     else
         this?.getParcelableArrayList(key)
 
-internal fun <T : Parcelable> Bundle?.getParcelableCompat(
+internal inline fun <reified T: Parcelable> Bundle?.getParcelableCompat(
     key: String,
     clazz: Class<out T>
 ): T? =
@@ -21,4 +22,13 @@ internal fun <T : Parcelable> Bundle?.getParcelableCompat(
         this?.getParcelable(key, clazz)
     else
         this?.getParcelable(key)
+
+internal inline fun <reified T : Serializable> Bundle.getSerializableCompat(key:String, clazz: Class<out T>): T? {
+    return if (Build.VERSION.SDK_INT >= 33) {
+        getSerializable(key,clazz)
+    } else {
+        @Suppress("DEPRECATION")
+        getSerializable(key) as? T
+    }
+}
 

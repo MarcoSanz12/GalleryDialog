@@ -1,5 +1,6 @@
 package com.marcosanz.gallerydialog.extension
 
+import android.app.Activity
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
@@ -7,8 +8,11 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.hardware.display.DisplayManager
 import android.net.Uri
 import android.provider.MediaStore
+import android.view.Display
+import android.view.Surface
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageView
@@ -24,6 +28,7 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
 import com.bumptech.glide.request.transition.Transition
+import com.panoramagl.ios.enumerations.UIDeviceOrientation
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -159,6 +164,18 @@ internal fun Drawable.toBitmap(): Bitmap {
     draw(canvas)
 
     return bitmap
+}
+
+internal fun Activity?.getUIDeviceOrientation() : UIDeviceOrientation?{
+    val displayManager = (this?.getSystemService(Context.DISPLAY_SERVICE) as? DisplayManager) ?: return null
+    val rotation = displayManager.getDisplay(Display.DEFAULT_DISPLAY).rotation
+    return when (rotation){
+        Surface.ROTATION_0 -> UIDeviceOrientation.UIDeviceOrientationPortrait
+        Surface.ROTATION_90 -> UIDeviceOrientation.UIDeviceOrientationLandscapeLeft
+        Surface.ROTATION_180 -> UIDeviceOrientation.UIDeviceOrientationPortraitUpsideDown
+        Surface.ROTATION_270 -> UIDeviceOrientation.UIDeviceOrientationLandscapeRight
+        else -> null
+    }
 }
 
 internal fun Bitmap.shareImage(context: Context, authority: String, shareMessage: String?) {
