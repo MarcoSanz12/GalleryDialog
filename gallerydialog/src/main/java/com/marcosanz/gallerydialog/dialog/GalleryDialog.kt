@@ -2,7 +2,6 @@ package com.marcosanz.gallerydialog.dialog
 
 import android.app.Dialog
 import android.content.pm.ActivityInfo
-import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -15,6 +14,7 @@ import android.view.Window
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.annotation.MenuRes
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -133,6 +133,7 @@ class GalleryDialog() : DialogFragment() {
         options = arguments?.getParcelableCompat(ARG_OPTIONS, GalleryDialogOptions::class.java)
             ?: GalleryDialogOptions()
 
+
         orientationManager = OrientationManager(requireActivity())
         restoreInstanceState(savedInstanceState)
     }
@@ -211,8 +212,12 @@ class GalleryDialog() : DialogFragment() {
             }
         }
 
+        val errorDrawable = if (options.errorDrawable != null)
+            ResourcesCompat.getDrawable(resources, options.errorDrawable!!, null)
+        else
+            null
         galleryAdapter =
-            GalleryDialogAdapter(images, ::onSingleTap, ::onDoubleTap, options.errorBitmap)
+            GalleryDialogAdapter(images, ::onSingleTap, ::onDoubleTap,errorDrawable)
 
         binding.viewpager.adapter = galleryAdapter
 

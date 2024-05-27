@@ -3,8 +3,6 @@ package com.marcosanz.app
 import android.os.Bundle
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.graphics.drawable.toBitmapOrNull
 import androidx.core.view.doOnPreDraw
 import com.bumptech.glide.Glide
 import com.marcosanz.app.databinding.ActivitySampleBinding
@@ -117,10 +115,7 @@ class SampleActivity : AppCompatActivity() {
             position,
             GalleryDialogOptions(
                 fileProviderAuthorities = "com.marcosanz.app",
-                errorBitmap = AppCompatResources.getDrawable(
-                    context,
-                    R.drawable.ic_launcher_background
-                )?.toBitmapOrNull()
+                errorDrawable = R.drawable.ic_launcher_foreground
             )
         ).show(supportFragmentManager, "gallery_dialog")
     }

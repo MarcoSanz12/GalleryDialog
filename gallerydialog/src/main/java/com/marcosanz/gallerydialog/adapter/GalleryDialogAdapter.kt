@@ -1,7 +1,6 @@
 package com.marcosanz.gallerydialog.adapter
 
 import android.annotation.SuppressLint
-import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.GestureDetector.OnDoubleTapListener
@@ -20,7 +19,7 @@ internal class GalleryDialogAdapter(
     val items: List<Image>,
     val onSingleTap: () -> Unit,
     val onDoubleTap: (isExpanding: Boolean) -> Unit,
-    val errorBitmap: Bitmap?
+    val errorDrawable: Drawable?
 ) : RecyclerView.Adapter<GalleryDialogAdapter.ViewHolder>() {
 
     companion object {
@@ -60,7 +59,7 @@ internal class GalleryDialogAdapter(
                     maxZoom = 5f
                     isSuperZoomEnabled = true
                     Log.d(TAG, "Bind url -> ${image.url}")
-                    loadFromUrl(url = image.url, defaultBitmap = errorBitmap) { drw ->
+                    loadFromUrl(url = image.url, defaultDrawable = errorDrawable) { drw ->
                         if (drw != null)
                             loadedDrawables[position] = drw
                     }

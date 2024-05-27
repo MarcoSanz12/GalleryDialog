@@ -1,8 +1,10 @@
 package com.marcosanz.gallerydialog.dialog
 
 import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.os.Parcel
 import android.os.Parcelable
+import androidx.annotation.DrawableRes
 
 data class GalleryDialogOptions(
 
@@ -52,9 +54,10 @@ data class GalleryDialogOptions(
     val messageErrorDownload: String? = null,
 
     /**
-     * Bitmap shown if any Image load fails
+     * Image resource shown if the image loading fails
      */
-    val errorBitmap : Bitmap? = null,
+    @DrawableRes
+    val errorDrawable : Int? = null,
 
     /**
      * If true, the dialog will allow orientation change and a rotation button will be shown
@@ -67,8 +70,8 @@ data class GalleryDialogOptions(
         parcel.readString(),
         parcel.readString(),
         parcel.readString(),
-        parcel.readParcelable(Bitmap::class.java.classLoader),
-        parcel.readValue(Boolean::class.java.classLoader) as Boolean
+        parcel.readValue(Int::class.java.classLoader) as? Int,
+        parcel.readByte() != 0.toByte()
     ) {
     }
 
@@ -78,8 +81,8 @@ data class GalleryDialogOptions(
         parcel.writeString(messageDownloading)
         parcel.writeString(messageSuccessfulDownload)
         parcel.writeString(messageErrorDownload)
-        parcel.writeParcelable(errorBitmap, flags)
-        parcel.writeValue(rotation)
+        parcel.writeValue(errorDrawable)
+        parcel.writeByte(if (rotation) 1 else 0)
     }
 
     override fun describeContents(): Int {
