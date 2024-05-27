@@ -158,11 +158,6 @@ class Gallery360Dialog() : DialogFragment() {
         restoreInstanceState(savedInstanceState)
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        throw Exception("OnConfigurationChanged has been called and is not supported. Please, check your activity AndroidManifest for android:configChanges=\"orientation|screenSize\" and remove it")
-    }
-
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return super.onCreateDialog(savedInstanceState).also {
             it.window?.let { wdw ->
