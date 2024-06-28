@@ -16,7 +16,7 @@ data class Gallery360DialogOptions(
     val rotation: Boolean = true,
 
     /**
-     * Allows sensorial rotation via Gyroscope, Accelerometer & Compass. Only work in Android 12+
+     * Allows sensorial rotation via Gyroscope, Accelerometer & Compass.
      */
     val sensorialRotation : Boolean = true
 ) : Parcelable {

@@ -5,4 +5,10 @@
     <string name="picture_saved">Bild gespeichert</string>
     <string name="saving_error">Beim Speichern des Bildes ist ein Problem aufgetreten</string>
     <string name="loading_error">Beim Laden des Bildes ist ein Problem aufgetreten</string>
+    
+    <!-- Tooltips -->
+    <string name="tooltip_sensorial_rotation">Sensorische Rotation</string>
+    <string name="tooltip_rotate">Drehen</string>
+    <string name="tooltip_options">Optionen</string>
+
 </resources>

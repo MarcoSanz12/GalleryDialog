@@ -36,18 +36,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/black75"
+        android:paddingBottom="5dp"
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/bt_back"
-            style="@style/Widget.Material3.Button.IconButton.Filled"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:paddingLeft="0dp"
-            android:paddingRight="0dp"
-            app:backgroundTint="@android:color/black"
+            style="@style/GalleryButton"
+            android:layout_marginStart="5dp"
             app:icon="@drawable/ic_back"
-            app:iconGravity="textStart"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintStart_toStartOf="parent"
@@ -55,20 +51,30 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/bt_rotate"
-            style="@style/Widget.Material3.Button.IconButton.Filled"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:paddingLeft="0dp"
-            android:paddingRight="0dp"
-            app:backgroundTint="@android:color/black"
+            style="@style/GalleryButton"
+            android:layout_marginEnd="5dp"
             app:icon="@drawable/ic_screen_rotation"
-            app:iconGravity="textStart"
-            app:iconSize="25dp"
-            app:iconTint="@android:color/white"
+            app:iconSize="28dp"
+            android:tooltipText="@string/tooltip_rotate"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/bt_sensorial_rotation"
+            style="@style/GalleryButton"
+            android:layout_marginEnd="10dp"
+            android:checkable="true"
+            android:visibility="gone"
+            app:icon="@drawable/ic_sensorial_rotation"
+            app:iconSize="30dp"
+            android:tooltipText="@string/tooltip_sensorial_rotation"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toStartOf="@id/bt_rotate"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- Footber abajo -->

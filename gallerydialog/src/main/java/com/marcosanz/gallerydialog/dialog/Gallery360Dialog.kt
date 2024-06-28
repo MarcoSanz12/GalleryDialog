@@ -2,7 +2,6 @@ package com.marcosanz.gallerydialog.dialog
 
 import android.app.Dialog
 import android.content.pm.ActivityInfo
-import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -203,15 +202,30 @@ class Gallery360Dialog() : DialogFragment() {
             isAcceleratedTouchScrollingEnabled = true
             activateOrientation()
 
+            // El botón esta invisible por defecto
+            binding.btSensorialRotation.apply {
+                isChecked = options.sensorialRotation
+                isVisible = options.sensorialRotation
+            }
             if (options.sensorialRotation) {
                 val newUIDeviceOrientation = activity.getUIDeviceOrientation()
                 newUIDeviceOrientation.notNull {
                     //updateGyroscopeRotationByOrientation(oldUIDeviceOrientation, it)
                 }
                 Log.i("DEVICE_ORIENTATION", "PanoramaGL -> $currentDeviceOrientation")
-                Log.i("DEVICE_ORIENTATION", "Old -> $oldUIDeviceOrientation\n New -> $newUIDeviceOrientation")
+                Log.i(
+                    "DEVICE_ORIENTATION",
+                    "Old -> $oldUIDeviceOrientation\n New -> $newUIDeviceOrientation"
+                )
                 startSensorialRotation()
                 oldUIDeviceOrientation = newUIDeviceOrientation ?: oldUIDeviceOrientation
+
+                binding.btSensorialRotation.addOnCheckedChangeListener { materialButton, isChecked ->
+                    if (isChecked)
+                        startSensorialRotation()
+                    else
+                        stopSensorialRotation()
+                }
             }
         }
 
@@ -384,6 +398,15 @@ class Gallery360Dialog() : DialogFragment() {
         private const val INITIAL_ORIENTATION = "INITIAL_ORIENTATION"
         private const val OLD_UI_ORIENTATION = "INITIAL_UI_ORIENTATION"
         private const val INITIAL_ACTIONBAR_COLOR = "INITIAL_ACTIONBAR_COLOR"
+
+        /**
+         * Creates a new instance of [Gallery360Dialog].
+         *
+         * @param image Image to display
+         * @param options Additional options for the dialog configuration
+         *
+         * @return A new instance of [GalleryDialog]
+         */
         fun newInstance(
             image: Image,
             options: Gallery360DialogOptions? = null

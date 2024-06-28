@@ -115,7 +115,8 @@ class SampleActivity : AppCompatActivity() {
             position,
             GalleryDialogOptions(
                 fileProviderAuthorities = "com.marcosanz.app",
-                errorDrawable = R.drawable.ic_launcher_foreground
+                errorDrawable = R.drawable.ic_launcher_foreground,
+                rotation = false
             )
         ).show(supportFragmentManager, "gallery_dialog")
     }
@@ -123,7 +124,10 @@ class SampleActivity : AppCompatActivity() {
     private fun ImageView.setGallery360DialogOnClick(position: Int) = setOnClickListener {
         Gallery360Dialog.newInstance(
             images360[position],
-            Gallery360DialogOptions()
+            Gallery360DialogOptions(
+                rotation = true,
+                sensorialRotation = true
+            )
         ).show(supportFragmentManager, "gallery_dialog")
     }
 }

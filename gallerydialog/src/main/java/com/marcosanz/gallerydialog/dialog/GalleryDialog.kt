@@ -400,17 +400,26 @@ class GalleryDialog() : DialogFragment() {
         private const val INITIAL_ORIENTATION = "INITIAL_ORIENTATION"
         private const val INITIAL_ACTIONBAR_COLOR = "INITIAL_ACTIONBAR_COLOR"
 
+        /**
+         * Creates a new instance of [GalleryDialog].
+         *
+         * @param images List of [Image] to display
+         * @param initialImage Initial image position
+         * @param options Additional options for the dialog configuration
+         *
+         * @return A new instance of [GalleryDialog]
+         */
         fun newInstance(
             images: List<Image>,
             initialImage: Int = 0,
-            galleryDialogOptions: GalleryDialogOptions? = null
+            options: GalleryDialogOptions? = null
         ): GalleryDialog {
             val fragment = GalleryDialog()
             val args = Bundle()
 
             args.putParcelableArrayList(ARG_IMAGES, ArrayList(images))
             args.putInt(ARG_INITIAL_IMAGE, initialImage)
-            args.putParcelable(ARG_OPTIONS, galleryDialogOptions)
+            args.putParcelable(ARG_OPTIONS, options)
 
             fragment.arguments = args
             return fragment

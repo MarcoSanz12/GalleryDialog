@@ -6,4 +6,10 @@
     <string name="picture_saved">Picture saved</string>
     <string name="saving_error">A problem occurred while saving the picture</string>
     <string name="loading_error">A problem occurred while loading the picture</string>
+
+    <!-- Tooltips -->
+    <string name="tooltip_sensorial_rotation">Sensorial rotation</string>
+    <string name="tooltip_rotate">Rotate</string>
+    <string name="tooltip_options">Options</string>
+
 </resources>

@@ -5,4 +5,10 @@
     <string name="picture_saved">S\'ha guardat la imatge</string>
     <string name="saving_error">S\'ha produït un problema en desar la imatge</string>
     <string name="loading_error">S\'ha produït un problema en carregar la imatge</string>
+    
+    <!-- Tooltips -->
+    <string name="tooltip_sensorial_rotation">Rotació sensorial</string>
+    <string name="tooltip_rotate">Girar</string>
+    <string name="tooltip_options">Opcions</string>
+
 </resources>

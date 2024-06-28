@@ -5,4 +5,10 @@
     <string name="picture_saved">Изображение сохранено</string>
     <string name="saving_error">Возникла проблема при сохранении изображения.</string>
     <string name="loading_error">Возникла проблема при загрузке изображения</string>
+    
+    <!-- Tooltips -->
+    <string name="tooltip_sensorial_rotation">Сенсорное вращение</string>
+    <string name="tooltip_rotate">Поворот</string>
+    <string name="tooltip_options">Параметры</string>
+
 </resources>

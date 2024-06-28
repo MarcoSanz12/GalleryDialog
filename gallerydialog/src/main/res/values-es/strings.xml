@@ -5,4 +5,10 @@
     <string name="picture_saved">Imagen guardada</string>
     <string name="saving_error">Error al guardar la imagen</string>
     <string name="loading_error">Error al cargar la imagen</string>
+    
+    <!-- Tooltips -->
+    <string name="tooltip_sensorial_rotation">Rotación sensorial</string>
+    <string name="tooltip_rotate">Rotar</string>
+    <string name="tooltip_options">Opciones</string>
+
 </resources>
