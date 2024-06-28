@@ -175,8 +175,8 @@ class GalleryDialog() : DialogFragment() {
                 val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
                 v.updatePadding(
                     top = insets.top,
-                    left = windowInsets.displayCutout?.safeInsetLeft ?: 0,
-                    right = windowInsets.displayCutout?.safeInsetRight ?: 0
+                    left = windowInsets.displayCutout?.safeInsetLeft?.plus(insets.left) ?: 0,
+                    right = windowInsets.displayCutout?.safeInsetRight?.plus(insets.right) ?: 0
                 )
                 isHeaderConsumed = true
             }
@@ -217,7 +217,7 @@ class GalleryDialog() : DialogFragment() {
         else
             null
         galleryAdapter =
-            GalleryDialogAdapter(images, ::onSingleTap, ::onDoubleTap,errorDrawable)
+            GalleryDialogAdapter(images, ::onSingleTap, ::onDoubleTap, errorDrawable)
 
         binding.viewpager.adapter = galleryAdapter
 

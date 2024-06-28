@@ -14,7 +14,8 @@ material = "1.11.0"
 activity = "1.8.0"
 constraintlayout = "2.1.4"
 materialVersion = "1.10.0"
-panoramagl = "1.10.2"
+panoramagl = "1.10.3"
+#panoramagl = "1.0.0"
 recyclerview = "1.3.2"
 touchimageview = "3.6"
 viewpager2 = "1.0.0"
@@ -38,6 +39,7 @@ androidx-constraintlayout = { group = "androidx.constraintlayout", name = "const
 material-v1100 = { module = "com.google.android.material:material", version.ref = "materialVersion" }
 
 panoramagl = { module = "com.github.MarcoSanz12:panoramaGL", version.ref = "panoramagl" }
+#panoramagl = { module = "com.marcosanz:panoramagl", version.ref = "panoramagl" }
 touchImageView = { module = "com.github.MikeOrtiz:TouchImageView", version.ref = "touchimageview" }
 
 
