@@ -241,9 +241,9 @@ class GalleryDialog() : DialogFragment() {
         _currentImage = image
         if (_isUIVisible && image.alt.isNotNullOrEmpty())
             visibleFooter()
-        else {
+        else
             invisibleFooter()
-        }
+
 
         updateText(image)
     }

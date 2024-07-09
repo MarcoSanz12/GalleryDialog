@@ -113,24 +113,36 @@ internal fun getBitmapFromUrl(
     url: String?,
     onBitmapLoaded: (Bitmap) -> Unit, onBitmapError: () -> Unit
 ) {
-    if (url == null){
+    if (url == null) {
         onBitmapError()
         return
     }
 
     try {
-        Glide.with(context).asBitmap().load(url).into(object : CustomTarget<Bitmap>() {
-            override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                onBitmapLoaded(resource)
-            }
+        Glide.with(context).asBitmap().load(url)
+            .into(object : CustomTarget<Bitmap>() {
+                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                    onBitmapLoaded(rescaleBitmap(resource))
+                }
 
-            override fun onLoadCleared(placeholder: Drawable?) {}
-        })
+                override fun onLoadCleared(placeholder: Drawable?) {}
+            })
     } catch (ex: Exception) {
         ex.printStackTrace()
         onBitmapError()
     }
+}
 
+internal fun rescaleBitmap(ogBitmap: Bitmap, maxWidth: Int = 7680, maxHeight: Int = 4320): Bitmap {
+    if (ogBitmap.width <= maxWidth && ogBitmap.height <= maxHeight) {
+        return ogBitmap // Rescaling unnecesary
+    }
+
+    val ratio = minOf(maxWidth.toFloat() / ogBitmap.width, maxHeight.toFloat() / ogBitmap.height)
+    val nuevoAncho = (ogBitmap.width * ratio).toInt()
+    val nuevoAlto = (ogBitmap.height * ratio).toInt()
+
+    return Bitmap.createScaledBitmap(ogBitmap, nuevoAncho, nuevoAlto, true)
 }
 
 internal fun Context.loadDrawable(imageUrl: String?, callback: (Bitmap?) -> Unit) {
@@ -166,10 +178,11 @@ internal fun Drawable.toBitmap(): Bitmap {
     return bitmap
 }
 
-internal fun Activity?.getUIDeviceOrientation() : UIDeviceOrientation?{
-    val displayManager = (this?.getSystemService(Context.DISPLAY_SERVICE) as? DisplayManager) ?: return null
+internal fun Activity?.getUIDeviceOrientation(): UIDeviceOrientation? {
+    val displayManager =
+        (this?.getSystemService(Context.DISPLAY_SERVICE) as? DisplayManager) ?: return null
     val rotation = displayManager.getDisplay(Display.DEFAULT_DISPLAY).rotation
-    return when (rotation){
+    return when (rotation) {
         Surface.ROTATION_0 -> UIDeviceOrientation.UIDeviceOrientationPortrait
         Surface.ROTATION_90 -> UIDeviceOrientation.UIDeviceOrientationLandscapeLeft
         Surface.ROTATION_180 -> UIDeviceOrientation.UIDeviceOrientationPortraitUpsideDown

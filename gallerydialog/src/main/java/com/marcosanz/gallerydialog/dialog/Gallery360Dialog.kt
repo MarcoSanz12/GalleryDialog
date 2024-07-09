@@ -209,14 +209,6 @@ class Gallery360Dialog() : DialogFragment() {
             }
             if (options.sensorialRotation) {
                 val newUIDeviceOrientation = activity.getUIDeviceOrientation()
-                newUIDeviceOrientation.notNull {
-                    //updateGyroscopeRotationByOrientation(oldUIDeviceOrientation, it)
-                }
-                Log.i("DEVICE_ORIENTATION", "PanoramaGL -> $currentDeviceOrientation")
-                Log.i(
-                    "DEVICE_ORIENTATION",
-                    "Old -> $oldUIDeviceOrientation\n New -> $newUIDeviceOrientation"
-                )
                 startSensorialRotation()
                 oldUIDeviceOrientation = newUIDeviceOrientation ?: oldUIDeviceOrientation
 

@@ -41,8 +41,8 @@ class SampleActivity : AppCompatActivity() {
 
     private val images360 = listOf(
         Image(
-            thumbnail = "https://s.studiobinder.com/wp-content/uploads/2019/11/360-Video-Featured-StudioBinder-Compressed.jpg",
-            url = "https://s.studiobinder.com/wp-content/uploads/2019/11/360-Video-Featured-StudioBinder-Compressed.jpg",
+            thumbnail = "https://museusvalenciades.grupotecopy.es/sites/default/files/2024-04/kris-guico-rsB-he-ye7w-unsplash.jpg",
+            url = "https://museusvalenciades.grupotecopy.es/sites/default/files/2024-04/kris-guico-rsB-he-ye7w-unsplash.jpg",
             alt = "360 city"
         ),
         Image(
