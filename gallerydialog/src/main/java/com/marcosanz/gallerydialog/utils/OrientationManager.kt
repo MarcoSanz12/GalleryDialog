@@ -1,7 +1,12 @@
 package com.marcosanz.gallerydialog.utils
 
 import android.app.Activity
+import android.content.Context
 import android.content.pm.ActivityInfo
+import android.content.res.Configuration
+import android.view.Surface
+import android.view.WindowManager
+import com.marcosanz.gallerydialog.extension.getDisplayRotation
 
 internal class OrientationManager(
     private val activity: Activity
@@ -18,25 +23,29 @@ internal class OrientationManager(
             activity.requestedOrientation = value
         }
 
+    private val deviceOrientation: Int
+        get() = activity.resources.configuration.orientation
+
     /**
      * Sets the [activity] orientation to [ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE]
      */
     fun setOrientationLandscape() {
-        displayOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        displayOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+
     }
 
     /**
      * Sets the [activity] orientation to [ActivityInfo.SCREEN_ORIENTATION_PORTRAIT]
      */
     fun setOrientationPortrait() {
-        displayOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        displayOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
     }
 
     /**
      * Toggles the [activity] orientation between [ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE] and [ActivityInfo.SCREEN_ORIENTATION_PORTRAIT]
      */
     fun toggleOrientation() {
-        if (displayOrientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+        if (deviceOrientation == Configuration.ORIENTATION_PORTRAIT)
             setOrientationLandscape()
         else
             setOrientationPortrait()

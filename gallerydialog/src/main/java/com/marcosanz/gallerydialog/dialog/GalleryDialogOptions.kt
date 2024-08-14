@@ -1,12 +1,10 @@
 package com.marcosanz.gallerydialog.dialog
 
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
 import android.os.Parcel
 import android.os.Parcelable
 import androidx.annotation.DrawableRes
 
-data class GalleryDialogOptions(
+internal data class GalleryDialogOptions(
 
     // FileProvider authorities
     /**

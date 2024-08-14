@@ -9,7 +9,6 @@ import com.marcosanz.app.databinding.ActivitySampleBinding
 import com.marcosanz.gallerydialog.dialog.Gallery360Dialog
 import com.marcosanz.gallerydialog.dialog.Gallery360DialogOptions
 import com.marcosanz.gallerydialog.dialog.GalleryDialog
-import com.marcosanz.gallerydialog.dialog.GalleryDialogOptions
 import com.marcosanz.gallerydialog.entity.Image
 
 
@@ -110,15 +109,13 @@ class SampleActivity : AppCompatActivity() {
     private fun ImageView.loadFromUrl(url: String?) = Glide.with(this).load(url).into(this)
 
     private fun ImageView.setGalleryDialogOnClick(position: Int) = setOnClickListener {
-        GalleryDialog.newInstance(
-            images,
-            position,
-            GalleryDialogOptions(
-                fileProviderAuthorities = "com.marcosanz.app",
-                errorDrawable = R.drawable.ic_launcher_foreground,
-                rotation = false
-            )
-        ).show(supportFragmentManager, "gallery_dialog")
+        GalleryDialog.Builder
+            .create(images, position)
+            .setFileProviderAuthorities("com.marcosanz.app")
+            .setErrorDrawable(R.drawable.ic_launcher_foreground)
+            .setAllowRotation(true)
+            .build()
+            .show(supportFragmentManager, "gallery_dialog")
     }
 
     private fun ImageView.setGallery360DialogOnClick(position: Int) = setOnClickListener {

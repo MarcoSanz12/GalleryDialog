@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.view.Window
 import android.widget.PopupMenu
 import android.widget.Toast
+import androidx.annotation.DrawableRes
 import androidx.annotation.MenuRes
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.ViewCompat
@@ -135,6 +136,10 @@ class GalleryDialog() : DialogFragment() {
 
 
         orientationManager = OrientationManager(requireActivity())
+
+        if (savedInstanceState == null)
+            initialOrientation = orientationManager.displayOrientation
+
         restoreInstanceState(savedInstanceState)
     }
 
@@ -360,7 +365,7 @@ class GalleryDialog() : DialogFragment() {
         if (initialActionBarColor != null)
             activity?.window?.statusBarColor = initialActionBarColor!!
 
-        if (!hasRotationChanged)
+        if (activity?.isChangingConfigurations != true)
             orientationManager.displayOrientation = initialOrientation
 
         super.onDestroy()
@@ -382,13 +387,87 @@ class GalleryDialog() : DialogFragment() {
      */
     private fun restoreInstanceState(inState: Bundle?) {
         // 1. Actionbar color
-        initialActionBarColor =
-            inState?.getInt(INITIAL_ACTIONBAR_COLOR) ?: activity?.window?.statusBarColor
+        inState?.getInt(INITIAL_ACTIONBAR_COLOR)?.let {
+            initialActionBarColor = it
+        }
 
+        // 2. Initial orientation
+        inState?.getInt(INITIAL_ORIENTATION)?.let {
+            initialOrientation = it
+        }
+    }
 
-        // 2. Orientation
-        initialOrientation = inState?.getInt(INITIAL_ORIENTATION)
-            ?: ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+    class Builder private constructor(
+        private val images: List<Image>,
+        private val initialPosition: Int = 0,
+    ) {
+        private var fileProviderAuthorities: String? = null
+        private var messageSharing: String? = null
+        private var messageDownloading: String? = null
+        private var messageSuccesfulDownload: String? = null
+        private var messageErrorDownload: String? = null
+
+        @DrawableRes
+        private var errorDrawable: Int? = null
+        private var allowRotation: Boolean = true
+
+        companion object {
+            fun create(images: List<Image>, initialPosition: Int = 0) =
+                Builder(images, initialPosition)
+
+            fun create(image: Image) = Builder(listOf(image))
+            fun create(url: String) = Builder(listOf(Image(url = url)))
+        }
+
+        /**
+         * Sets the fileProviderAuthorities for the [GalleryDialog] to allow sharing images
+         */
+        fun setFileProviderAuthorities(fileProviderAuthorities: String) = this.apply {
+            this.fileProviderAuthorities = fileProviderAuthorities
+        }
+
+        /**
+         * Sets the messages for the [GalleryDialog]
+         */
+        fun setMessages(
+            messageSharing: String? = null,
+            messageDownloading: String? = null,
+            messageSuccesfulDownload: String? = null,
+            messageErrorDownload: String? = null
+        ) = this.apply {
+            this.messageSharing = messageSharing
+            this.messageDownloading = messageDownloading
+            this.messageSuccesfulDownload = messageSuccesfulDownload
+            this.messageErrorDownload = messageErrorDownload
+        }
+
+        /**
+         * Sets the drawable to display when loading fails
+         */
+        fun setErrorDrawable(@DrawableRes errorDrawable: Int) = this.apply {
+            this.errorDrawable = errorDrawable
+        }
+
+        /**
+         * Specifies if the rotation should be activated
+         */
+        fun setAllowRotation(allowRotation: Boolean) = this.apply {
+            this.allowRotation = allowRotation
+        }
+
+        fun build(): GalleryDialog = newInstance(
+            images = images,
+            initialImage = initialPosition,
+            options = GalleryDialogOptions(
+                fileProviderAuthorities = fileProviderAuthorities,
+                messageSharing = messageSharing,
+                messageDownloading = messageDownloading,
+                messageSuccessfulDownload = messageSuccesfulDownload,
+                messageErrorDownload = messageErrorDownload,
+                errorDrawable = errorDrawable,
+                rotation = allowRotation
+            )
+        )
     }
 
 
@@ -409,7 +488,7 @@ class GalleryDialog() : DialogFragment() {
          *
          * @return A new instance of [GalleryDialog]
          */
-        fun newInstance(
+        private fun newInstance(
             images: List<Image>,
             initialImage: Int = 0,
             options: GalleryDialogOptions? = null
