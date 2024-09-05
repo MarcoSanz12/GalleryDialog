@@ -28,6 +28,7 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
 import com.bumptech.glide.request.transition.Transition
+import com.marcosanz.gallerydialog.entity.Image
 import com.panoramagl.ios.enumerations.UIDeviceOrientation
 import java.io.File
 import java.io.FileOutputStream
@@ -52,22 +53,28 @@ internal fun View.invisible(animate: Boolean = false, y: Float? = null) {
         }
 }
 
-internal fun ImageView.loadFromUrl(
-    url: String?,
+internal fun ImageView.loadFromImage(
+    image: Image? = null,
     defaultDrawable: Drawable? = null,
     onResourceReady: (Drawable?) -> Unit
 ) {
 
-    if (url.isNullOrEmpty()) {
+    if (image == null) {
         this.setImageDrawable(defaultDrawable)
         return
     }
 
-    Glide.with(this).load(url).transition(
-        DrawableTransitionOptions.withCrossFade(
-            DrawableCrossFadeFactory.Builder().setCrossFadeEnabled(true)
+    val request = Glide.with(this)
+    when (image) {
+        is Image.Drawable -> request.load(image.drawable)
+        is Image.URI -> request.load(image.uri)
+        is Image.URL -> request.load(image.url)
+    }
+        .transition(
+            DrawableTransitionOptions.withCrossFade(
+                DrawableCrossFadeFactory.Builder().setCrossFadeEnabled(true)
+            )
         )
-    )
         .error(defaultDrawable)
         .listener(object : RequestListener<Drawable> {
             override fun onLoadFailed(
@@ -108,21 +115,39 @@ internal fun ImageView.loadFromUrl(
         })
 }
 
-internal fun getBitmapFromUrl(
+internal fun Image?.getBitmap(
     context: Context,
-    url: String?,
+    errorDrawable: Drawable? = null,
     onBitmapLoaded: (Bitmap) -> Unit, onBitmapError: () -> Unit
 ) {
-    if (url == null) {
+    if (this == null) {
         onBitmapError()
         return
     }
 
+    // Check for nulls
+    when (this) {
+        is Image.Drawable -> this.drawable ?: return
+        is Image.URI -> this.uri ?: return
+        is Image.URL -> this.url ?: return
+    }
+
     try {
-        Glide.with(context).asBitmap().load(url)
+        val request = Glide.with(context).asBitmap()
+        when (this) {
+            is Image.Drawable -> request.load(this.drawable)
+            is Image.URI -> request.load(this.uri)
+            is Image.URL -> request.load(this.url)
+        }
+            .error(errorDrawable)
             .into(object : CustomTarget<Bitmap>() {
                 override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                     onBitmapLoaded(rescaleBitmap(resource))
+                }
+
+                override fun onLoadFailed(errorDrawable: Drawable?) {
+                    super.onLoadFailed(errorDrawable)
+                    onBitmapError()
                 }
 
                 override fun onLoadCleared(placeholder: Drawable?) {}
@@ -145,11 +170,15 @@ internal fun rescaleBitmap(ogBitmap: Bitmap, maxWidth: Int = 7680, maxHeight: In
     return Bitmap.createScaledBitmap(ogBitmap, nuevoAncho, nuevoAlto, true)
 }
 
-internal fun Context.loadDrawable(imageUrl: String?, callback: (Bitmap?) -> Unit) {
-    imageUrl ?: return
+internal fun Context.loadDrawable(image: Image?, callback: (Bitmap?) -> Unit) {
+    image ?: return
 
-    Glide.with(this)
-        .load(imageUrl)
+    val request = Glide.with(this)
+    when (image) {
+        is Image.Drawable -> request.load(image.drawable)
+        is Image.URI -> request.load(image.uri)
+        is Image.URL -> request.load(image.url)
+    }
         .into(object : CustomTarget<Drawable>() {
             override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
                 callback(resource.toBitmap())  // El drawable está listo, lo pasamos al callback

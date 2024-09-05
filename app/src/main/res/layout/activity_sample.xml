@@ -1,145 +1,269 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:fillViewport="true">
 
-    <com.google.android.flexbox.FlexboxLayout
-        android:id="@+id/ly_images"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:alignItems="center"
-        app:flexWrap="wrap"
-        app:justifyContent="space_around"
-        app:layout_constraintBottom_toTopOf="@+id/gl_50"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.9"
-        app:layout_constraintVertical_chainStyle="packed">
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iv_image1"
-            android:layout_width="0dp"
-            android:layout_height="100dp"
-            android:padding="10dp"
-            android:scaleType="centerCrop"
-            android:transitionName="image_0"
-            app:layout_flexBasisPercent="50%"
-            app:layout_flexGrow="1"
-            tools:src="@tools:sample/backgrounds/scenic" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iv_image2"
-            android:layout_width="0dp"
-            android:layout_height="100dp"
-            android:padding="10dp"
-            android:scaleType="centerCrop"
-            app:layout_flexBasisPercent="50%"
-            app:layout_flexGrow="1"
-            tools:src="@tools:sample/backgrounds/scenic" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iv_image3"
-            android:layout_width="0dp"
-            android:layout_height="100dp"
-            android:padding="10dp"
-            android:scaleType="centerCrop"
-            app:layout_flexBasisPercent="50%"
-            app:layout_flexGrow="1"
-            tools:src="@tools:sample/backgrounds/scenic" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iv_image4"
-            android:layout_width="0dp"
-            android:layout_height="100dp"
-            android:padding="10dp"
-            android:scaleType="centerCrop"
-            app:layout_flexBasisPercent="50%"
-            app:layout_flexGrow="1"
-            tools:src="@tools:sample/backgrounds/scenic" />
-    </com.google.android.flexbox.FlexboxLayout>
-
-    <com.google.android.material.textview.MaterialTextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="IMAGES"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@id/ly_images" />
+        android:layout_marginVertical="20dp"
+        android:orientation="vertical">
+        <!-- Images -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true"
+            android:orientation="vertical">
+            <!-- 1. URL -->
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="IMAGES URL"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
-    <com.google.android.flexbox.FlexboxLayout
-        android:id="@+id/ly_images360"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:alignItems="center"
-        app:flexWrap="wrap"
-        app:justifyContent="space_around"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/gl_50"
-        app:layout_constraintVertical_bias="0.100000024">
+            <com.google.android.flexbox.FlexboxLayout
+                android:id="@+id/ly_images_url"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:alignItems="center"
+                app:flexWrap="wrap"
+                app:justifyContent="space_around">
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iv_image360_1"
-            android:layout_width="0dp"
-            android:layout_height="100dp"
-            android:padding="10dp"
-            android:scaleType="centerCrop"
-            android:transitionName="image_0"
-            app:layout_flexBasisPercent="50%"
-            app:layout_flexGrow="1"
-            tools:src="@tools:sample/backgrounds/scenic" />
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_image_url_1"
+                    android:layout_width="0dp"
+                    android:layout_height="100dp"
+                    android:padding="10dp"
+                    android:scaleType="centerCrop"
+                    android:transitionName="image_0"
+                    app:layout_flexBasisPercent="50%"
+                    app:layout_flexGrow="1"
+                    tools:src="@tools:sample/backgrounds/scenic" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iv_image360_2"
-            android:layout_width="0dp"
-            android:layout_height="100dp"
-            android:padding="10dp"
-            android:scaleType="centerCrop"
-            app:layout_flexBasisPercent="50%"
-            app:layout_flexGrow="1"
-            tools:src="@tools:sample/backgrounds/scenic" />
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_image_url_2"
+                    android:layout_width="0dp"
+                    android:layout_height="100dp"
+                    android:padding="10dp"
+                    android:scaleType="centerCrop"
+                    app:layout_flexBasisPercent="50%"
+                    app:layout_flexGrow="1"
+                    tools:src="@tools:sample/backgrounds/scenic" />
+            </com.google.android.flexbox.FlexboxLayout>
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iv_image360_3"
-            android:layout_width="0dp"
-            android:layout_height="100dp"
-            android:padding="10dp"
-            android:scaleType="centerCrop"
-            app:layout_flexBasisPercent="50%"
-            app:layout_flexGrow="1"
-            tools:src="@tools:sample/backgrounds/scenic" />
+            <!-- 2. Drawables -->
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:text="IMAGES DRAWABLE"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iv_image360_4"
-            android:layout_width="0dp"
-            android:layout_height="100dp"
-            android:padding="10dp"
-            android:scaleType="centerCrop"
-            app:layout_flexBasisPercent="50%"
-            app:layout_flexGrow="1"
-            tools:src="@tools:sample/backgrounds/scenic" />
-    </com.google.android.flexbox.FlexboxLayout>
+            <com.google.android.flexbox.FlexboxLayout
+                android:id="@+id/ly_images_drawable"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:alignItems="center"
+                app:flexWrap="wrap"
+                app:justifyContent="space_around">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/materialTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="IMAGES 360"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@id/ly_images360" />
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_image_drawable_1"
+                    android:layout_width="0dp"
+                    android:layout_height="100dp"
+                    android:padding="10dp"
+                    android:scaleType="centerCrop"
+                    android:transitionName="image_0"
+                    app:layout_flexBasisPercent="50%"
+                    app:layout_flexGrow="1"
+                    tools:src="@tools:sample/backgrounds/scenic" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/gl_50"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.5" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_image_drawable_2"
+                    android:layout_width="0dp"
+                    android:layout_height="100dp"
+                    android:padding="10dp"
+                    android:scaleType="centerCrop"
+                    app:layout_flexBasisPercent="50%"
+                    app:layout_flexGrow="1"
+                    tools:src="@tools:sample/backgrounds/scenic" />
+            </com.google.android.flexbox.FlexboxLayout>
+
+            <!-- 3. IMAGES URIs -->
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:text="IMAGES URI"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <com.google.android.flexbox.FlexboxLayout
+                android:id="@+id/ly_images_uri"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:alignItems="center"
+                app:flexWrap="wrap"
+                app:justifyContent="space_around">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_image_uri_1"
+                    android:layout_width="0dp"
+                    android:layout_height="100dp"
+                    android:padding="10dp"
+                    android:scaleType="centerCrop"
+                    android:transitionName="image_0"
+                    app:layout_flexBasisPercent="50%"
+                    app:layout_flexGrow="1"
+                    tools:src="@tools:sample/backgrounds/scenic" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_image_uri_2"
+                    android:layout_width="0dp"
+                    android:layout_height="100dp"
+                    android:padding="10dp"
+                    android:scaleType="centerCrop"
+                    app:layout_flexBasisPercent="50%"
+                    app:layout_flexGrow="1"
+                    tools:src="@tools:sample/backgrounds/scenic" />
+            </com.google.android.flexbox.FlexboxLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="20dp"
+            android:background="@android:color/holo_purple" />
+        <!-- Images 360-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true"
+            android:orientation="vertical">
+            <!-- 1. URL -->
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="IMAGES 360 URL"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <com.google.android.flexbox.FlexboxLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:alignItems="center"
+                app:flexWrap="wrap"
+                app:justifyContent="space_around">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_image360_url_1"
+                    android:layout_width="0dp"
+                    android:layout_height="100dp"
+                    android:padding="10dp"
+                    android:scaleType="centerCrop"
+                    android:transitionName="image_0"
+                    app:layout_flexBasisPercent="50%"
+                    app:layout_flexGrow="1"
+                    tools:src="@tools:sample/backgrounds/scenic" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_image360_url_2"
+                    android:layout_width="0dp"
+                    android:layout_height="100dp"
+                    android:padding="10dp"
+                    android:scaleType="centerCrop"
+                    app:layout_flexBasisPercent="50%"
+                    app:layout_flexGrow="1"
+                    tools:src="@tools:sample/backgrounds/scenic" />
+            </com.google.android.flexbox.FlexboxLayout>
+
+            <!-- 2. Drawables -->
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:text="IMAGES 360 DRAWABLE"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <com.google.android.flexbox.FlexboxLayout
+                android:id="@+id/ly_images360_drawable"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:alignItems="center"
+                app:flexWrap="wrap"
+                app:justifyContent="space_around">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_image360_drawable_1"
+                    android:layout_width="0dp"
+                    android:layout_height="100dp"
+                    android:padding="10dp"
+                    android:scaleType="centerCrop"
+                    android:transitionName="image_0"
+                    app:layout_flexBasisPercent="50%"
+                    app:layout_flexGrow="1"
+                    tools:src="@tools:sample/backgrounds/scenic" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_image_360_drawable_2"
+                    android:layout_width="0dp"
+                    android:layout_height="100dp"
+                    android:padding="10dp"
+                    android:scaleType="centerCrop"
+                    app:layout_flexBasisPercent="50%"
+                    app:layout_flexGrow="1"
+                    tools:src="@tools:sample/backgrounds/scenic" />
+            </com.google.android.flexbox.FlexboxLayout>
+
+            <!-- 3. IMAGES URIs -->
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:text="IMAGES 360 URI"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <com.google.android.flexbox.FlexboxLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:alignItems="center"
+                app:flexWrap="wrap"
+                app:justifyContent="space_around">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_image360_uri_1"
+                    android:layout_width="0dp"
+                    android:layout_height="100dp"
+                    android:padding="10dp"
+                    android:scaleType="centerCrop"
+                    android:transitionName="image_0"
+                    app:layout_flexBasisPercent="50%"
+                    app:layout_flexGrow="1"
+                    tools:src="@tools:sample/backgrounds/scenic" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_image360_uri_2"
+                    android:layout_width="0dp"
+                    android:layout_height="100dp"
+                    android:padding="10dp"
+                    android:scaleType="centerCrop"
+                    app:layout_flexBasisPercent="50%"
+                    app:layout_flexGrow="1"
+                    tools:src="@tools:sample/backgrounds/scenic" />
+            </com.google.android.flexbox.FlexboxLayout>
+        </LinearLayout>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

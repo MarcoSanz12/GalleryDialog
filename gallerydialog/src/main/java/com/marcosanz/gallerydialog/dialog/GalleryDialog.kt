@@ -5,6 +5,7 @@ import android.content.pm.ActivityInfo
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -46,13 +47,13 @@ class GalleryDialog() : DialogFragment() {
     /**
      * Returns the currently selected [Image]
      */
-    val currentImage
+    private val currentImage
         get() = _currentImage
 
     /**
      * Returns the list of [Image] used by the Dialog
      */
-    val imageList
+    private val imageList
         get() = images
 
     /**
@@ -308,7 +309,7 @@ class GalleryDialog() : DialogFragment() {
     }
 
     private fun onClickShare() {
-        context?.loadDrawable(images[binding.viewpager.currentItem].url) { bitmap ->
+        context?.loadDrawable(images[binding.viewpager.currentItem]) { bitmap ->
             val shareMsg = options.messageSharing
             bitmap?.shareImage(requireContext(), options.fileProviderAuthorities!!, shareMsg)
         }
@@ -321,7 +322,7 @@ class GalleryDialog() : DialogFragment() {
         if (savedDrawable != null)
             savedDrawable.toBitmap().saveToPictures()
         else
-            context?.loadDrawable(images[binding.viewpager.currentItem].url) { bitmap ->
+            context?.loadDrawable(images[binding.viewpager.currentItem]) { bitmap ->
                 bitmap.saveToPictures()
             }
     }
@@ -412,11 +413,65 @@ class GalleryDialog() : DialogFragment() {
         private var allowRotation: Boolean = true
 
         companion object {
-            fun create(images: List<Image>, initialPosition: Int = 0) =
-                Builder(images, initialPosition)
+            fun createWithUrl(
+                urls: List<String?>? = null,
+                alts: List<String?>? = null,
+                initialPosition: Int = 0
+            ) =
+                Builder(
+                    images =
+                    urls?.mapNotNull {
+                        val index = urls.indexOf(it)
+                        Image.URL(alt = alts?.getOrNull(index), url = it)
+                    } ?: emptyList(),
+                    initialPosition = initialPosition
+                )
 
-            fun create(image: Image) = Builder(listOf(image))
-            fun create(url: String) = Builder(listOf(Image(url = url)))
+            fun createWithUrl(
+                url: String? = null,
+                alt: String? = null
+            ) = Builder(
+                images = listOf(Image.URL(alt = alt, url = url))
+            )
+
+            fun createWithDrawable(
+                drawables: List<Int?>? = null,
+                alts: List<String?>? = null,
+                initialPosition: Int = 0
+            ) =
+                Builder(
+                    images =
+                    drawables?.mapNotNull {
+                        val index = drawables.indexOf(it)
+                        Image.Drawable(alt = alts?.getOrNull(index), drawable = it)
+                    } ?: emptyList(),
+                    initialPosition = initialPosition
+                )
+
+            fun createWithDrawable(
+                @DrawableRes drawable: Int? = null,
+                alt: String? = null
+            ) = Builder(listOf(Image.Drawable(alt = alt, drawable = drawable)))
+
+
+            fun createWithUri(
+                uris: List<Uri?>? = null,
+                alts: List<String?>? = null,
+                initialPosition: Int = 0
+            ) = Builder(
+                images =
+                uris?.mapNotNull {
+                    val index = uris.indexOf(it)
+                    Image.URI(alt = alts?.getOrNull(index), uri = it)
+                } ?: emptyList(),
+                initialPosition = initialPosition
+            )
+
+            fun createWithUri(
+                uri: Uri? = null,
+                alt: String? = null
+            ) = Builder(listOf(Image.URI(alt = alt, uri = uri)))
+
         }
 
         /**

@@ -1,9 +1,10 @@
 package com.marcosanz.gallerydialog.dialog
 
-import android.os.Parcel
 import android.os.Parcelable
 import androidx.annotation.DrawableRes
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 internal data class GalleryDialogOptions(
 
     // FileProvider authorities
@@ -55,46 +56,10 @@ internal data class GalleryDialogOptions(
      * Image resource shown if the image loading fails
      */
     @DrawableRes
-    val errorDrawable : Int? = null,
+    val errorDrawable: Int? = null,
 
     /**
      * If true, the dialog will allow orientation change and a rotation button will be shown
      */
     val rotation: Boolean = true
-) : Parcelable{
-    constructor(parcel: Parcel) : this(
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readValue(Int::class.java.classLoader) as? Int,
-        parcel.readByte() != 0.toByte()
-    ) {
-    }
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(fileProviderAuthorities)
-        parcel.writeString(messageSharing)
-        parcel.writeString(messageDownloading)
-        parcel.writeString(messageSuccessfulDownload)
-        parcel.writeString(messageErrorDownload)
-        parcel.writeValue(errorDrawable)
-        parcel.writeByte(if (rotation) 1 else 0)
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<GalleryDialogOptions> {
-        override fun createFromParcel(parcel: Parcel): GalleryDialogOptions {
-            return GalleryDialogOptions(parcel)
-        }
-
-        override fun newArray(size: Int): Array<GalleryDialogOptions?> {
-            return arrayOfNulls(size)
-        }
-    }
-
-}
+) : Parcelable

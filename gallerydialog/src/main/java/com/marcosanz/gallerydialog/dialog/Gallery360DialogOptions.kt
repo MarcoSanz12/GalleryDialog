@@ -1,9 +1,11 @@
 package com.marcosanz.gallerydialog.dialog
 
-import android.os.Parcel
 import android.os.Parcelable
+import androidx.annotation.DrawableRes
+import kotlinx.parcelize.Parcelize
 
-data class Gallery360DialogOptions(
+@Parcelize
+internal data class Gallery360DialogOptions(
 
     /**
      * Message shown if image loading fails
@@ -18,32 +20,11 @@ data class Gallery360DialogOptions(
     /**
      * Allows sensorial rotation via Gyroscope, Accelerometer & Compass.
      */
-    val sensorialRotation : Boolean = true
-) : Parcelable {
-    constructor(parcel: Parcel) : this(
-        parcel.readString(),
-        parcel.readValue(Boolean::class.java.classLoader) as Boolean,
-        parcel.readValue(Boolean::class.java.classLoader) as Boolean
-    ) {
-    }
+    val sensorialRotation: Boolean = true,
 
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(errorMessage)
-        parcel.writeValue(rotation)
-        parcel.writeValue(sensorialRotation)
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<Gallery360DialogOptions> {
-        override fun createFromParcel(parcel: Parcel): Gallery360DialogOptions {
-            return Gallery360DialogOptions(parcel)
-        }
-
-        override fun newArray(size: Int): Array<Gallery360DialogOptions?> {
-            return arrayOfNulls(size)
-        }
-    }
-}
+    /**
+     * Image resource shown if the image loading fails
+     */
+    @DrawableRes
+    val errorDrawable: Int? = null
+) : Parcelable

@@ -2,7 +2,6 @@ package com.marcosanz.gallerydialog.adapter
 
 import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
-import android.util.Log
 import android.view.GestureDetector.OnDoubleTapListener
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -12,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.marcosanz.gallerydialog.R
 import com.marcosanz.gallerydialog.databinding.ItemGalleryBinding
 import com.marcosanz.gallerydialog.entity.Image
-import com.marcosanz.gallerydialog.extension.loadFromUrl
+import com.marcosanz.gallerydialog.extension.loadFromImage
 
 
 internal class GalleryDialogAdapter(
@@ -58,8 +57,7 @@ internal class GalleryDialogAdapter(
                     doubleTapScale = 2f
                     maxZoom = 5f
                     isSuperZoomEnabled = true
-                    Log.d(TAG, "Bind url -> ${image.url}")
-                    loadFromUrl(url = image.url, defaultDrawable = errorDrawable) { drw ->
+                    loadFromImage(image = image, defaultDrawable = errorDrawable) { drw ->
                         if (drw != null)
                             loadedDrawables[position] = drw
                     }
