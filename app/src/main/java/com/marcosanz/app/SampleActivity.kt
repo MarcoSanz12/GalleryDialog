@@ -1,67 +1,54 @@
 package com.marcosanz.app
 
+import android.net.Uri
 import android.os.Bundle
 import android.widget.ImageView
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.doOnPreDraw
 import com.bumptech.glide.Glide
 import com.marcosanz.app.databinding.ActivitySampleBinding
+import com.marcosanz.app.entities.ImageDrawable
+import com.marcosanz.app.entities.ImageProvider.getImagesUri
+import com.marcosanz.app.entities.ImageProvider.images360Drawable
+import com.marcosanz.app.entities.ImageProvider.images360Url
+import com.marcosanz.app.entities.ImageProvider.imagesDrawable
+import com.marcosanz.app.entities.ImageProvider.imagesUrl
+import com.marcosanz.app.entities.ImageURI
+import com.marcosanz.app.entities.ImageURL
 import com.marcosanz.gallerydialog.dialog.Gallery360Dialog
-import com.marcosanz.gallerydialog.dialog.Gallery360DialogOptions
 import com.marcosanz.gallerydialog.dialog.GalleryDialog
-import com.marcosanz.gallerydialog.dialog.GalleryDialogOptions
-import com.marcosanz.gallerydialog.entity.Image
 
 
 class SampleActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySampleBinding
 
-    private val images = listOf(
-        Image(
-            thumbnail = "https://media.licdn.com/dms/image/C4E03AQHc8TgMSagC7Q/profile-displayphoto-shrink_800_800/0/1614784623062?e=2147483647&v=beta&t=0dARt006OVNRV5uozNO_aXoxOG7Wk-BxX5cDwrWNe9g",
-            url = "https://media.licdn.com/dms/image/C4E03AQHc8TgMSagC7Q/profile-displayphoto-shrink_800_800/0/1614784623062?e=2147483647&v=beta&t=0dARt006OVNRV5uozNO_aXoxOG7Wk-BxX5cDwrWNe9g",
-            alt = "Famous spanish youtuber Willyrex"
-        ),
-        Image(
-            thumbnail = "https://brobible.com/wp-content/uploads/2022/05/its-morbin-time.jpg",
-            url = "https://brobible.com/wp-content/uploads/2022/05/its-morbin-time.jpg",
-            alt = "Doctor Michael Morbius from the comic series Batman"
-        ),
-        Image(
-            thumbnail = "https://avatars.githubusercontent.com/u/100760981?v=4",
-            url = "https://avatars.githubusercontent.com/u/100760981?v=4",
-            alt = "Danwolve98 - Danwolve98"
-        ),
-        Image(
-            thumbnail = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLP7J4nTJmmUmqWeIRK5QBRRmCQhzPlDxt5VaWewvQSw&s",
-            url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLP7J4nTJmmUmqWeIRK5QBRRmCQhzPlDxt5VaWewvQSw&s",
+    val imagesUri by lazy {
+        getImagesUri(
+            this, "com.marcosanz.app",
+            drawableRes =
+            listOf(
+                R.drawable.cuellar_pueblo1,
+                R.drawable.cuellar_pueblo2
+            )
         )
-    )
+    }
 
-    private val images360 = listOf(
-        Image(
-            thumbnail = "https://museusvalenciades.grupotecopy.es/sites/default/files/2024-04/kris-guico-rsB-he-ye7w-unsplash.jpg",
-            url = "https://museusvalenciades.grupotecopy.es/sites/default/files/2024-04/kris-guico-rsB-he-ye7w-unsplash.jpg",
-            alt = "360 city"
-        ),
-        Image(
-            thumbnail = "https://www.antevenio.com/wp-content/uploads/2017/02/ejemplos-de-v%C3%ADdeos-360.jpg",
-            url = "https://www.antevenio.com/wp-content/uploads/2017/02/ejemplos-de-v%C3%ADdeos-360.jpg",
-            alt = "Panoramic example 2"
-        ),
-        Image(
-            thumbnail = "https://media.macphun.com/img/uploads/customer/blog/2432/169339558164ef2a7d7179d5.77274305.jpg?q=85&w=1680",
-            url = "https://media.macphun.com/img/uploads/customer/blog/2432/169339558164ef2a7d7179d5.77274305.jpg?q=85&w=1680",
-        ),
-        Image(
-            thumbnail = "https://img.youtube.com/vi/VaZcXQ8Th7s/maxresdefault.jpg",
-            url = "https://img.youtube.com/vi/VaZcXQ8Th7s/maxresdefault.jpg",
+    val images360Uri by lazy {
+        getImagesUri(
+            this, "com.marcosanz.app",
+            drawableRes =
+            listOf(
+                R.drawable.image360_3,
+                R.drawable.image360_4
+            )
         )
-    )
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         startPostponedEnterTransition()
         binding = ActivitySampleBinding.inflate(layoutInflater)
@@ -71,63 +58,174 @@ class SampleActivity : AppCompatActivity() {
             startPostponedEnterTransition()
         }
 
-        binding.ivImage1.run {
-            loadFromUrl(images[0].thumbnail)
-            setGalleryDialogOnClick(0)
-        }
-        binding.ivImage2.run {
-            loadFromUrl(images[1].thumbnail)
-            setGalleryDialogOnClick(1)
-        }
-        binding.ivImage3.run {
-            loadFromUrl(images[2].thumbnail)
-            setGalleryDialogOnClick(2)
-        }
-        binding.ivImage4.run {
-            loadFromUrl(images[3].thumbnail)
-            setGalleryDialogOnClick(3)
-        }
-
-        binding.ivImage3601.run {
-            loadFromUrl(images360[0].thumbnail)
-            setGallery360DialogOnClick(0)
-        }
-        binding.ivImage3602.run {
-            loadFromUrl(images360[1].thumbnail)
-            setGallery360DialogOnClick(1)
-        }
-        binding.ivImage3603.run {
-            loadFromUrl(images360[2].thumbnail)
-            setGallery360DialogOnClick(2)
-        }
-        binding.ivImage3604.run {
-            loadFromUrl(images360[3].thumbnail)
-            setGallery360DialogOnClick(3)
-        }
-
+        prepareImages()
+        prepareImages360()
     }
+
 
     private fun ImageView.loadFromUrl(url: String?) = Glide.with(this).load(url).into(this)
 
-    private fun ImageView.setGalleryDialogOnClick(position: Int) = setOnClickListener {
-        GalleryDialog.newInstance(
-            images,
-            position,
-            GalleryDialogOptions(
-                fileProviderAuthorities = "com.marcosanz.app",
-                errorDrawable = R.drawable.ic_launcher_foreground,
-                rotation = false
-            )
-        ).show(supportFragmentManager, "gallery_dialog")
-    }
+    private fun ImageView.loadFromUri(uri: Uri?) = Glide.with(this).load(uri).into(this)
 
-    private fun ImageView.setGallery360DialogOnClick(position: Int) = setOnClickListener {
-        Gallery360Dialog.newInstance(
-            images360[position],
-            Gallery360DialogOptions(
-                rotation = true,
-                sensorialRotation = true
+    private fun prepareImages() =
+        with(binding) {
+            ivImageUrl1.run {
+                loadFromUrl(imagesUrl[0].thumbnail)
+                setOnClickListener {
+                    showGalleryDialogURL(imagesUrl)
+                }
+
+            }
+            ivImageUrl2.run {
+                loadFromUrl(imagesUrl[1].thumbnail)
+                setOnClickListener {
+                    showGalleryDialogURL(imagesUrl, 1)
+                }
+            }
+            ivImageDrawable1.run {
+                setImageResource(imagesDrawable[0].resId!!)
+                setOnClickListener {
+                    showGalleryDialogDrawable(imagesDrawable)
+                }
+            }
+            ivImageDrawable2.run {
+                setImageResource(imagesDrawable[1].resId!!)
+                setOnClickListener {
+                    showGalleryDialogDrawable(imagesDrawable, 1)
+                }
+            }
+
+            ivImageUri1.run {
+                loadFromUri(imagesUri[0].thumbnail)
+                setOnClickListener {
+                    showGalleryDialogURI(imagesUri)
+                }
+            }
+            ivImageUri2.run {
+                loadFromUri(imagesUri[1].thumbnail)
+                setOnClickListener {
+                    showGalleryDialogURI(imagesUri, 1)
+                }
+            }
+        }
+
+    private fun prepareImages360() =
+        with(binding) {
+            ivImage360Url1.run {
+                loadFromUrl(images360Url[0].thumbnail)
+                setOnClickListener {
+                    showGalleryDialog360URL(0)
+                }
+
+            }
+            ivImage360Url2.run {
+                loadFromUrl(images360Url[1].thumbnail)
+                setOnClickListener {
+                    showGalleryDialog360URL(1)
+                }
+            }
+            ivImage360Drawable1.run {
+                setImageResource(images360Drawable[0].resId!!)
+                setOnClickListener {
+                    showGalleryDialog360Drawable(0)
+                }
+            }
+            ivImage360Drawable2.run {
+                setImageResource(images360Drawable[1].resId!!)
+                setOnClickListener {
+                    showGalleryDialog360Drawable(1)
+                }
+            }
+
+            ivImage360Uri1.run {
+                loadFromUri(images360Uri[0].thumbnail)
+                setOnClickListener {
+                    showGalleryDialog360Uri(0)
+                }
+            }
+            ivImage360Uri2.run {
+                loadFromUri(images360Uri[1].thumbnail)
+                setOnClickListener {
+                    showGalleryDialog360Uri(1)
+                }
+            }
+        }
+
+    private fun showGalleryDialogURL(images: List<ImageURL>, position: Int = 0) =
+        GalleryDialog.Builder
+            .createWithUrl(
+                urls = images.map { it.url },
+                alts = images.map { it.alt },
+                initialPosition = position
             )
-        ).show(supportFragmentManager, "gallery_dialog")
-    }
+            .setFileProviderAuthorities("com.marcosanz.app")
+            .setErrorDrawable(R.drawable.cuellar1)
+            .setAllowRotation(true)
+            .build()
+            .show(supportFragmentManager, "gallery_dialog")
+
+    private fun showGalleryDialogDrawable(images: List<ImageDrawable>, position: Int = 0) =
+        GalleryDialog.Builder
+            .createWithDrawable(
+                drawables = images.map { it.resId },
+                alts = images.map { it.alt },
+                initialPosition = position
+            )
+            .setFileProviderAuthorities("com.marcosanz.app")
+            .setErrorDrawable(R.drawable.ic_launcher_foreground)
+            .setAllowRotation(true)
+            .build()
+            .show(supportFragmentManager, "gallery_dialog")
+
+    private fun showGalleryDialogURI(images: List<ImageURI>, position: Int = 0) =
+        GalleryDialog.Builder
+            .createWithUri(
+                uris = images.map { it.uri },
+                alts = images.map { it.alt },
+                initialPosition = position
+            )
+            .setFileProviderAuthorities("com.marcosanz.app")
+            .setErrorDrawable(R.drawable.ic_launcher_foreground)
+            .setAllowRotation(false)
+            .build()
+            .show(supportFragmentManager, "gallery_dialog")
+
+    private fun showGalleryDialog360URL(position: Int) =
+        Gallery360Dialog.Builder
+            .createWithUrl(
+                /*url = images360Url[position].url,
+                alt = images360Url[position].alt*/
+            )
+            .setErrorMessage("Error loading the image")
+            .setErrorDrawable(R.drawable.cuellar1)
+            .setAllowRotation(false)
+            .setSensorialRotation(false)
+            .build()
+            .show(supportFragmentManager, "gallery_dialog")
+
+    private fun showGalleryDialog360Drawable(position: Int) =
+        Gallery360Dialog.Builder
+            .createWithDrawable(
+                drawable = images360Drawable[position].resId,
+                alt = images360Drawable[position].alt
+            )
+            .setErrorMessage("Error loading the image")
+            .setErrorDrawable(R.drawable.cuellar1)
+            .setAllowRotation(true)
+            .setSensorialRotation(true)
+            .build()
+            .show(supportFragmentManager, "gallery_dialog")
+
+    private fun showGalleryDialog360Uri(position: Int) =
+        Gallery360Dialog.Builder
+            .createWithUri(
+                uri = images360Uri[position].uri,
+                alt = images360Uri[position].alt
+            )
+            .setErrorMessage("Error loading the image")
+            .setErrorDrawable(R.drawable.cuellar1)
+            .setAllowRotation(true)
+            .setSensorialRotation(true)
+            .build()
+            .show(supportFragmentManager, "gallery_dialog")
 }

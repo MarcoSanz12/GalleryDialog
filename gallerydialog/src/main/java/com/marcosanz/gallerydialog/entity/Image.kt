@@ -1,38 +1,31 @@
 package com.marcosanz.gallerydialog.entity
 
-import android.os.Parcel
+import android.net.Uri
 import android.os.Parcelable
+import androidx.annotation.DrawableRes
+import kotlinx.parcelize.Parcelize
 
-data class Image(
-    val thumbnail: String? = null,
-    val url: String? = null,
-    val alt: String? = null
+@Parcelize
+internal sealed class Image(
+    open val alt: String? = null,
+    open val url: String? = null,
+    open val uri: Uri? = null,
+    @DrawableRes open val drawable: Int? = null
 ) : Parcelable {
 
-    constructor(parcel: Parcel) : this(
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString()
-    ) {
-    }
+    internal data class URL(
+        override val alt: String? = null,
+        override val url: String? = null
+    ) : Image()
 
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(thumbnail)
-        parcel.writeString(url)
-        parcel.writeString(alt)
-    }
+    internal data class Drawable(
+        override val alt: String? = null,
+        @DrawableRes override val drawable: Int? = null
+    ) : Image()
 
-    override fun describeContents(): Int {
-        return 0
-    }
+    internal data class URI(
+        override val alt: String? = null,
+        override val uri: Uri? = null
+    ) : Image()
 
-    companion object CREATOR : Parcelable.Creator<Image> {
-        override fun createFromParcel(parcel: Parcel): Image {
-            return Image(parcel)
-        }
-
-        override fun newArray(size: Int): Array<Image?> {
-            return arrayOfNulls(size)
-        }
-    }
 }

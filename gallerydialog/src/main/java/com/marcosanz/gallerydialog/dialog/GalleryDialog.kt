@@ -5,6 +5,7 @@ import android.content.pm.ActivityInfo
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,6 +14,7 @@ import android.view.ViewGroup
 import android.view.Window
 import android.widget.PopupMenu
 import android.widget.Toast
+import androidx.annotation.DrawableRes
 import androidx.annotation.MenuRes
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.ViewCompat
@@ -22,6 +24,7 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
 import androidx.core.view.updatePadding
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentManager
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.marcosanz.gallerydialog.R
 import com.marcosanz.gallerydialog.adapter.GalleryDialogAdapter
@@ -45,13 +48,13 @@ class GalleryDialog() : DialogFragment() {
     /**
      * Returns the currently selected [Image]
      */
-    val currentImage
+    private val currentImage
         get() = _currentImage
 
     /**
      * Returns the list of [Image] used by the Dialog
      */
-    val imageList
+    private val imageList
         get() = images
 
     /**
@@ -126,6 +129,10 @@ class GalleryDialog() : DialogFragment() {
         images = arguments.getParcelableArrayListCompat(ARG_IMAGES, Image::class.java)?.toList()
             ?: emptyList()
 
+        // To allow for errorDrawable to show up
+        if (images.isEmpty())
+            images = listOf(Image.Drawable())
+
         // 2. Initial image position
         initialImage = arguments?.getInt(ARG_INITIAL_IMAGE) ?: 0
 
@@ -135,6 +142,10 @@ class GalleryDialog() : DialogFragment() {
 
 
         orientationManager = OrientationManager(requireActivity())
+
+        if (savedInstanceState == null)
+            initialOrientation = orientationManager.displayOrientation
+
         restoreInstanceState(savedInstanceState)
     }
 
@@ -164,7 +175,6 @@ class GalleryDialog() : DialogFragment() {
         binding.tvText.maxLines = maxAltLines
         return binding.root
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -303,7 +313,7 @@ class GalleryDialog() : DialogFragment() {
     }
 
     private fun onClickShare() {
-        context?.loadDrawable(images[binding.viewpager.currentItem].url) { bitmap ->
+        context?.loadDrawable(images[binding.viewpager.currentItem], errorDrawable = options.errorDrawable) { bitmap ->
             val shareMsg = options.messageSharing
             bitmap?.shareImage(requireContext(), options.fileProviderAuthorities!!, shareMsg)
         }
@@ -316,7 +326,7 @@ class GalleryDialog() : DialogFragment() {
         if (savedDrawable != null)
             savedDrawable.toBitmap().saveToPictures()
         else
-            context?.loadDrawable(images[binding.viewpager.currentItem].url) { bitmap ->
+            context?.loadDrawable(images[binding.viewpager.currentItem],errorDrawable = options.errorDrawable) { bitmap ->
                 bitmap.saveToPictures()
             }
     }
@@ -360,7 +370,7 @@ class GalleryDialog() : DialogFragment() {
         if (initialActionBarColor != null)
             activity?.window?.statusBarColor = initialActionBarColor!!
 
-        if (!hasRotationChanged)
+        if (activity?.isChangingConfigurations != true)
             orientationManager.displayOrientation = initialOrientation
 
         super.onDestroy()
@@ -382,13 +392,149 @@ class GalleryDialog() : DialogFragment() {
      */
     private fun restoreInstanceState(inState: Bundle?) {
         // 1. Actionbar color
-        initialActionBarColor =
-            inState?.getInt(INITIAL_ACTIONBAR_COLOR) ?: activity?.window?.statusBarColor
+        inState?.getInt(INITIAL_ACTIONBAR_COLOR)?.let {
+            initialActionBarColor = it
+        }
+
+        // 2. Initial orientation
+        inState?.getInt(INITIAL_ORIENTATION)?.let {
+            initialOrientation = it
+        }
+    }
 
 
-        // 2. Orientation
-        initialOrientation = inState?.getInt(INITIAL_ORIENTATION)
-            ?: ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+    override fun show(manager: FragmentManager, tag: String?) {
+        if (manager.fragments.any { it is GalleryDialog || it is Gallery360Dialog })
+            return
+
+        super.show(manager, tag)
+    }
+
+    class Builder private constructor(
+        private val images: List<Image>,
+        private val initialPosition: Int = 0,
+    ) {
+        private var fileProviderAuthorities: String? = null
+        private var messageSharing: String? = null
+        private var messageDownloading: String? = null
+        private var messageSuccesfulDownload: String? = null
+        private var messageErrorDownload: String? = null
+
+        @DrawableRes
+        private var errorDrawable: Int? = null
+        private var allowRotation: Boolean = true
+
+        companion object {
+            fun createWithUrl(
+                urls: List<String?>? = null,
+                alts: List<String?>? = null,
+                initialPosition: Int = 0
+            ) =
+                Builder(
+                    images =
+                    urls?.map {
+                        val index = urls.indexOf(it)
+                        Image.URL(alt = alts?.getOrNull(index), url = it)
+                    } ?: emptyList(),
+                    initialPosition = initialPosition
+                )
+
+            fun createWithUrl(
+                url: String? = null,
+                alt: String? = null
+            ) = Builder(
+                images = listOf(Image.URL(alt = alt, url = url))
+            )
+
+            fun createWithDrawable(
+                drawables: List<Int?>? = null,
+                alts: List<String?>? = null,
+                initialPosition: Int = 0
+            ) =
+                Builder(
+                    images =
+                    drawables?.map {
+                        val index = drawables.indexOf(it)
+                        Image.Drawable(alt = alts?.getOrNull(index), drawable = it)
+                    } ?: emptyList(),
+                    initialPosition = initialPosition
+                )
+
+            fun createWithDrawable(
+                @DrawableRes drawable: Int? = null,
+                alt: String? = null
+            ) = Builder(listOf(Image.Drawable(alt = alt, drawable = drawable)))
+
+
+            fun createWithUri(
+                uris: List<Uri?>? = null,
+                alts: List<String?>? = null,
+                initialPosition: Int = 0
+            ) = Builder(
+                images =
+                uris?.map {
+                    val index = uris.indexOf(it)
+                    Image.URI(alt = alts?.getOrNull(index), uri = it)
+                } ?: emptyList(),
+                initialPosition = initialPosition
+            )
+
+            fun createWithUri(
+                uri: Uri? = null,
+                alt: String? = null
+            ) = Builder(listOf(Image.URI(alt = alt, uri = uri)))
+
+        }
+
+        /**
+         * Sets the fileProviderAuthorities for the [GalleryDialog] to allow sharing images
+         */
+        fun setFileProviderAuthorities(fileProviderAuthorities: String) = this.apply {
+            this.fileProviderAuthorities = fileProviderAuthorities
+        }
+
+        /**
+         * Sets the messages for the [GalleryDialog]
+         */
+        fun setMessages(
+            messageSharing: String? = null,
+            messageDownloading: String? = null,
+            messageSuccesfulDownload: String? = null,
+            messageErrorDownload: String? = null
+        ) = this.apply {
+            this.messageSharing = messageSharing
+            this.messageDownloading = messageDownloading
+            this.messageSuccesfulDownload = messageSuccesfulDownload
+            this.messageErrorDownload = messageErrorDownload
+        }
+
+        /**
+         * Sets the drawable to display when loading fails
+         */
+        fun setErrorDrawable(@DrawableRes errorDrawable: Int) = this.apply {
+            this.errorDrawable = errorDrawable
+        }
+
+        /**
+         * Specifies if the rotation should be activated
+         */
+        fun setAllowRotation(allowRotation: Boolean) = this.apply {
+            this.allowRotation = allowRotation
+        }
+
+        fun build(): GalleryDialog = newInstance(
+            images = images,
+            initialImage = initialPosition,
+            options = GalleryDialogOptions(
+                fileProviderAuthorities = fileProviderAuthorities,
+                messageSharing = messageSharing,
+                messageDownloading = messageDownloading,
+                messageSuccessfulDownload = messageSuccesfulDownload,
+                messageErrorDownload = messageErrorDownload,
+                errorDrawable = errorDrawable,
+                rotation = allowRotation
+            )
+        )
     }
 
 
@@ -409,7 +555,7 @@ class GalleryDialog() : DialogFragment() {
          *
          * @return A new instance of [GalleryDialog]
          */
-        fun newInstance(
+        private fun newInstance(
             images: List<Image>,
             initialImage: Int = 0,
             options: GalleryDialogOptions? = null

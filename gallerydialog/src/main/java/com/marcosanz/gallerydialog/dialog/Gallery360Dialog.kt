@@ -5,8 +5,8 @@ import android.content.pm.ActivityInfo
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.GestureDetector
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -14,6 +14,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.Toast
+import androidx.annotation.DrawableRes
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -21,10 +23,11 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
 import androidx.core.view.updatePadding
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentManager
 import com.marcosanz.gallerydialog.R
 import com.marcosanz.gallerydialog.databinding.DlgGallery360Binding
 import com.marcosanz.gallerydialog.entity.Image
-import com.marcosanz.gallerydialog.extension.getBitmapFromUrl
+import com.marcosanz.gallerydialog.extension.getBitmap
 import com.marcosanz.gallerydialog.extension.getParcelableCompat
 import com.marcosanz.gallerydialog.extension.getSerializableCompat
 import com.marcosanz.gallerydialog.extension.getUIDeviceOrientation
@@ -80,9 +83,8 @@ class Gallery360Dialog() : DialogFragment() {
     private lateinit var options: Gallery360DialogOptions
 
     private var initialActionbarColor: Int? = null
-    private var initialOrientation: Int
+    private var initialOrientation: Int = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     private var oldUIDeviceOrientation: UIDeviceOrientation
-    private var hasRotationChanged = false
 
     private val windowInsetsController: WindowInsetsControllerCompat?
         get() =
@@ -98,8 +100,6 @@ class Gallery360Dialog() : DialogFragment() {
     init {
         isCancelable = true
 
-        initialOrientation =
-            activity?.requestedOrientation ?: ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         oldUIDeviceOrientation =
             activity.getUIDeviceOrientation() ?: UIDeviceOrientation.UIDeviceOrientationPortrait
 
@@ -151,9 +151,11 @@ class Gallery360Dialog() : DialogFragment() {
         ) ?: Gallery360DialogOptions()
 
         // 2. Image
-        image = arguments.getParcelableCompat(ARG_IMAGE, Image::class.java) ?: Image()
+        image = arguments.getParcelableCompat(ARG_IMAGE, Image::class.java) ?: Image.URL("xd", "xd")
 
         orientationManager = OrientationManager(requireActivity())
+        if (savedInstanceState == null)
+            initialOrientation = orientationManager.displayOrientation
         restoreInstanceState(savedInstanceState)
     }
 
@@ -177,8 +179,17 @@ class Gallery360Dialog() : DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        val errorDrawable = if (options.errorDrawable != null)
+            AppCompatResources.getDrawable(requireContext(), options.errorDrawable!!)
+        else
+            null
         binding = DlgGallery360Binding.inflate(inflater, null, false)
-        getBitmapFromUrl(requireContext(), image.url, ::onPanoramaLoaded, ::onPanoramaError)
+        image.getBitmap(
+            requireContext(),
+            errorDrawable,
+            ::onPanoramaLoaded,
+            ::onPanoramaError
+        )
         // I. Config max alt lines
         binding.tvText.maxLines = maxAltLines
 
@@ -245,7 +256,7 @@ class Gallery360Dialog() : DialogFragment() {
         startPostponedEnterTransition()
         Toast.makeText(
             requireContext(),
-            options.errorMessage ?: getString(R.string.saving_error),
+            options.errorMessage ?: getString(R.string.loading_error),
             Toast.LENGTH_SHORT
         ).show()
         dismiss()
@@ -294,7 +305,6 @@ class Gallery360Dialog() : DialogFragment() {
     }
 
     private fun onRotateClick() {
-        hasRotationChanged = true
         orientationManager.toggleOrientation()
     }
 
@@ -373,14 +383,93 @@ class Gallery360Dialog() : DialogFragment() {
     private fun invisibleFooter() =
         binding.lyFooter.invisible(true, y = 25f)
 
+
+    override fun show(manager: FragmentManager, tag: String?) {
+        if (manager.fragments.any { it is GalleryDialog || it is Gallery360Dialog })
+            return
+
+        super.show(manager, tag)
+    }
+
     override fun onDestroy() {
         if (initialActionbarColor != null)
             activity?.window?.statusBarColor = initialActionbarColor!!
         plManager?.onDestroy()
-        if (!hasRotationChanged) {
+
+        if (activity?.isChangingConfigurations != true)
             orientationManager.displayOrientation = initialOrientation
-        }
+
         super.onDestroy()
+    }
+
+    class Builder private constructor(
+        private val image: Image
+    ) {
+        @DrawableRes
+        private var errorDrawable: Int? = null
+        private var errorMessage: String? = null
+        private var allowRotation: Boolean = true
+        private var sensorialRotation: Boolean = true
+
+        companion object {
+
+            fun createWithUrl(
+                url: String? = null,
+                alt: String? = null
+            ) = Builder(
+                image = Image.URL(alt, url)
+            )
+
+            fun createWithDrawable(
+                @DrawableRes drawable: Int? = null,
+                alt: String? = null
+            ) = Builder(Image.Drawable(alt, drawable))
+
+
+            fun createWithUri(
+                uri: Uri? = null,
+                alt: String? = null
+            ) = Builder(Image.URI(alt, uri))
+
+        }
+
+        /**
+         * Sets the drawable to display when loading fails
+         */
+        fun setErrorDrawable(@DrawableRes errorDrawable: Int) = this.apply {
+            this.errorDrawable = errorDrawable
+        }
+
+        /**
+         * Sets the error message to display when loading fails
+         */
+        fun setErrorMessage(errorMessage: String) = this.apply {
+            this.errorMessage = errorMessage
+        }
+
+        /**
+         * Sets if the sensorial rotation should be activated
+         */
+        fun setSensorialRotation(sensorialRotation: Boolean) = this.apply {
+            this.sensorialRotation = sensorialRotation
+        }
+
+        /**
+         * Specifies if the rotation should be activated
+         */
+        fun setAllowRotation(allowRotation: Boolean) = this.apply {
+            this.allowRotation = allowRotation
+        }
+
+        fun build(): Gallery360Dialog = newInstance(
+            image = image,
+            options = Gallery360DialogOptions(
+                errorDrawable = errorDrawable,
+                rotation = allowRotation,
+                sensorialRotation = sensorialRotation,
+                errorMessage = errorMessage
+            )
+        )
     }
 
     companion object {
@@ -399,7 +488,7 @@ class Gallery360Dialog() : DialogFragment() {
          *
          * @return A new instance of [GalleryDialog]
          */
-        fun newInstance(
+        private fun newInstance(
             image: Image,
             options: Gallery360DialogOptions? = null
         ): Gallery360Dialog {
