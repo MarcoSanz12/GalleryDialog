@@ -3,7 +3,10 @@
 
 GalleryDialog is a library created to display **images** and **360 panoramic images** in a comfortable and simple way. It allows adding explanatory text for the photo in a footer that appears and hides dynamically.
 
-*Currently, it only works with image loading via URL using [Glide](https://github.com/bumptech/glide). In the future, I would like to add the option to pass created drawables or bitmaps.*
+Currently works with:
+- **Drawable resources**
+- **Uris**
+- **URL** using [Glide](https://github.com/bumptech/glide)
 
 Standard images use the [TouchImageView](https://github.com/MikeOrtiz/TouchImageView) library, which allows zooming through gestures.
 
@@ -21,38 +24,42 @@ Standard images use the [TouchImageView](https://github.com/MikeOrtiz/TouchImage
 *(Both galleries support screen rotation using the rotation button)*
 
 ## How to use
-Both classes are [DialogFragments](https://developer.android.com/guide/fragments/dialogs), with a static function *newInstance()* to facilitate their creation.
+Both classes are [DialogFragments](https://developer.android.com/guide/fragments/dialogs), with a static *Builder* class to facilitate their creation.
 
 I recommend creating an extended function to show the dialog when clicking on an ImageView.
 ```kotlin
 // GalleryDialog
-    private fun ImageView.setGalleryDialogOnClick(position: Int) = setOnClickListener {
-        GalleryDialog.newInstance(
-            images,
-            position,
-            GalleryDialogOptions(
-                fileProviderAuthorities = "com.marcosanz.app",
-                errorDrawable = R.drawable.ic_launcher_foreground,
-                rotation = false
+    private fun ImageView.setGalleryDialogOnClick() = setOnClickListener {
+        GalleryDialog.Builder
+            .createWithUrl(
+                url = "{url}",
+                alt = "Test image"
             )
-        ).show(supportFragmentManager, "gallery_dialog")
+            .setErrorDrawable(R.drawable.errorDrawable)
+            .setAllowRotation(true)
+            .setFileProviderAuthorities("{your_file_provider_authorities}")
+            .build()
+            .show(supportFragmentManager, "gallery_dialog")
     }
 ```
 
 ```kotlin
 // Gallery360Dialog
-private fun ImageView.setGallery360DialogOnClick(position: Int) = setOnClickListener {
-        Gallery360Dialog.newInstance(
-            images360[position],
-            Gallery360DialogOptions(
-                rotation = true,
-                sensorialRotation = true
+    private fun ImageView.setGallery360DialogOnClick() = setOnClickListener {
+        Gallery360Dialog.Builder
+            .createWithUrl(
+                url = "{url}",
+                alt = "Test image"
             )
-        ).show(supportFragmentManager, "gallery_dialog")
+            .setErrorDrawable(R.drawable.errorDrawable)
+            .setAllowRotation(true)
+            .setSensorialRotation(true)
+            .build()
+            .show(supportFragmentManager, "gallery_dialog")
     }
 ```
 
-With the DialogOptions classes, you can customize some minor settings, such as the texts displayed, allow rotation, or enable sensor rotation.
+With the Builder functions, you can customize some minor settings, such as the texts displayed, allow rotation, or enable sensor rotation.
 
 Check the sample app to see all these features implemented.
 
