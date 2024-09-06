@@ -23,6 +23,7 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
 import androidx.core.view.updatePadding
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentManager
 import com.marcosanz.gallerydialog.R
 import com.marcosanz.gallerydialog.databinding.DlgGallery360Binding
 import com.marcosanz.gallerydialog.entity.Image
@@ -82,9 +83,8 @@ class Gallery360Dialog() : DialogFragment() {
     private lateinit var options: Gallery360DialogOptions
 
     private var initialActionbarColor: Int? = null
-    private var initialOrientation: Int
+    private var initialOrientation: Int = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     private var oldUIDeviceOrientation: UIDeviceOrientation
-    private var hasRotationChanged = false
 
     private val windowInsetsController: WindowInsetsControllerCompat?
         get() =
@@ -100,8 +100,6 @@ class Gallery360Dialog() : DialogFragment() {
     init {
         isCancelable = true
 
-        initialOrientation =
-            activity?.requestedOrientation ?: ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         oldUIDeviceOrientation =
             activity.getUIDeviceOrientation() ?: UIDeviceOrientation.UIDeviceOrientationPortrait
 
@@ -156,6 +154,8 @@ class Gallery360Dialog() : DialogFragment() {
         image = arguments.getParcelableCompat(ARG_IMAGE, Image::class.java) ?: Image.URL("xd", "xd")
 
         orientationManager = OrientationManager(requireActivity())
+        if (savedInstanceState == null)
+            initialOrientation = orientationManager.displayOrientation
         restoreInstanceState(savedInstanceState)
     }
 
@@ -256,7 +256,7 @@ class Gallery360Dialog() : DialogFragment() {
         startPostponedEnterTransition()
         Toast.makeText(
             requireContext(),
-            options.errorMessage ?: getString(R.string.saving_error),
+            options.errorMessage ?: getString(R.string.loading_error),
             Toast.LENGTH_SHORT
         ).show()
         dismiss()
@@ -305,7 +305,6 @@ class Gallery360Dialog() : DialogFragment() {
     }
 
     private fun onRotateClick() {
-        hasRotationChanged = true
         orientationManager.toggleOrientation()
     }
 
@@ -384,13 +383,22 @@ class Gallery360Dialog() : DialogFragment() {
     private fun invisibleFooter() =
         binding.lyFooter.invisible(true, y = 25f)
 
+
+    override fun show(manager: FragmentManager, tag: String?) {
+        if (manager.fragments.any { it is GalleryDialog || it is Gallery360Dialog })
+            return
+
+        super.show(manager, tag)
+    }
+
     override fun onDestroy() {
         if (initialActionbarColor != null)
             activity?.window?.statusBarColor = initialActionbarColor!!
         plManager?.onDestroy()
-        if (!hasRotationChanged) {
+
+        if (activity?.isChangingConfigurations != true)
             orientationManager.displayOrientation = initialOrientation
-        }
+
         super.onDestroy()
     }
 

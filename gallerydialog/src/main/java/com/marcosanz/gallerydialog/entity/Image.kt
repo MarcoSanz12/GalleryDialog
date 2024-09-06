@@ -14,17 +14,17 @@ internal sealed class Image(
 ) : Parcelable {
 
     internal data class URL(
-        override val alt: String?,
-        override val url: String?
+        override val alt: String? = null,
+        override val url: String? = null
     ) : Image()
 
     internal data class Drawable(
-        override val alt: String?,
-        @DrawableRes override val drawable: Int?
+        override val alt: String? = null,
+        @DrawableRes override val drawable: Int? = null
     ) : Image()
 
     internal data class URI(
-        override val alt: String?,
+        override val alt: String? = null,
         override val uri: Uri? = null
     ) : Image()
 

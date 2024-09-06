@@ -24,6 +24,7 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
 import androidx.core.view.updatePadding
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentManager
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.marcosanz.gallerydialog.R
 import com.marcosanz.gallerydialog.adapter.GalleryDialogAdapter
@@ -128,6 +129,10 @@ class GalleryDialog() : DialogFragment() {
         images = arguments.getParcelableArrayListCompat(ARG_IMAGES, Image::class.java)?.toList()
             ?: emptyList()
 
+        // To allow for errorDrawable to show up
+        if (images.isEmpty())
+            images = listOf(Image.Drawable())
+
         // 2. Initial image position
         initialImage = arguments?.getInt(ARG_INITIAL_IMAGE) ?: 0
 
@@ -170,7 +175,6 @@ class GalleryDialog() : DialogFragment() {
         binding.tvText.maxLines = maxAltLines
         return binding.root
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -309,7 +313,7 @@ class GalleryDialog() : DialogFragment() {
     }
 
     private fun onClickShare() {
-        context?.loadDrawable(images[binding.viewpager.currentItem]) { bitmap ->
+        context?.loadDrawable(images[binding.viewpager.currentItem], errorDrawable = options.errorDrawable) { bitmap ->
             val shareMsg = options.messageSharing
             bitmap?.shareImage(requireContext(), options.fileProviderAuthorities!!, shareMsg)
         }
@@ -322,7 +326,7 @@ class GalleryDialog() : DialogFragment() {
         if (savedDrawable != null)
             savedDrawable.toBitmap().saveToPictures()
         else
-            context?.loadDrawable(images[binding.viewpager.currentItem]) { bitmap ->
+            context?.loadDrawable(images[binding.viewpager.currentItem],errorDrawable = options.errorDrawable) { bitmap ->
                 bitmap.saveToPictures()
             }
     }
@@ -398,6 +402,14 @@ class GalleryDialog() : DialogFragment() {
         }
     }
 
+
+    override fun show(manager: FragmentManager, tag: String?) {
+        if (manager.fragments.any { it is GalleryDialog || it is Gallery360Dialog })
+            return
+
+        super.show(manager, tag)
+    }
+
     class Builder private constructor(
         private val images: List<Image>,
         private val initialPosition: Int = 0,
@@ -420,7 +432,7 @@ class GalleryDialog() : DialogFragment() {
             ) =
                 Builder(
                     images =
-                    urls?.mapNotNull {
+                    urls?.map {
                         val index = urls.indexOf(it)
                         Image.URL(alt = alts?.getOrNull(index), url = it)
                     } ?: emptyList(),
@@ -441,7 +453,7 @@ class GalleryDialog() : DialogFragment() {
             ) =
                 Builder(
                     images =
-                    drawables?.mapNotNull {
+                    drawables?.map {
                         val index = drawables.indexOf(it)
                         Image.Drawable(alt = alts?.getOrNull(index), drawable = it)
                     } ?: emptyList(),
@@ -460,7 +472,7 @@ class GalleryDialog() : DialogFragment() {
                 initialPosition: Int = 0
             ) = Builder(
                 images =
-                uris?.mapNotNull {
+                uris?.map {
                     val index = uris.indexOf(it)
                     Image.URI(alt = alts?.getOrNull(index), uri = it)
                 } ?: emptyList(),

@@ -159,7 +159,7 @@ class SampleActivity : AppCompatActivity() {
                 initialPosition = position
             )
             .setFileProviderAuthorities("com.marcosanz.app")
-            .setErrorDrawable(R.drawable.ic_launcher_foreground)
+            .setErrorDrawable(R.drawable.cuellar1)
             .setAllowRotation(true)
             .build()
             .show(supportFragmentManager, "gallery_dialog")
@@ -186,20 +186,20 @@ class SampleActivity : AppCompatActivity() {
             )
             .setFileProviderAuthorities("com.marcosanz.app")
             .setErrorDrawable(R.drawable.ic_launcher_foreground)
-            .setAllowRotation(true)
+            .setAllowRotation(false)
             .build()
             .show(supportFragmentManager, "gallery_dialog")
 
     private fun showGalleryDialog360URL(position: Int) =
         Gallery360Dialog.Builder
             .createWithUrl(
-                url = images360Url[position].url,
-                alt = images360Url[position].alt
+                /*url = images360Url[position].url,
+                alt = images360Url[position].alt*/
             )
             .setErrorMessage("Error loading the image")
             .setErrorDrawable(R.drawable.cuellar1)
-            .setAllowRotation(true)
-            .setSensorialRotation(true)
+            .setAllowRotation(false)
+            .setSensorialRotation(false)
             .build()
             .show(supportFragmentManager, "gallery_dialog")
 

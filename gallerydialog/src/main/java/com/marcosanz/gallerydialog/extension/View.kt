@@ -16,6 +16,7 @@ import android.view.Surface
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageView
+import androidx.annotation.DrawableRes
 import androidx.core.content.FileProvider
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
@@ -104,10 +105,12 @@ internal fun ImageView.loadFromImage(
                 resource: Drawable,
                 transition: Transition<in Drawable?>?
             ) {
-
                 setImageDrawable(resource)
             }
 
+            override fun onLoadFailed(errorDrawable: Drawable?) {
+                setImageDrawable(errorDrawable)
+            }
 
             override fun onLoadCleared(placeholder: Drawable?) {
 
@@ -125,13 +128,6 @@ internal fun Image?.getBitmap(
         return
     }
 
-    // Check for nulls
-    when (this) {
-        is Image.Drawable -> this.drawable ?: return
-        is Image.URI -> this.uri ?: return
-        is Image.URL -> this.url ?: return
-    }
-
     try {
         val request = Glide.with(context).asBitmap()
         when (this) {
@@ -147,7 +143,11 @@ internal fun Image?.getBitmap(
 
                 override fun onLoadFailed(errorDrawable: Drawable?) {
                     super.onLoadFailed(errorDrawable)
-                    onBitmapError()
+
+                    if (errorDrawable != null)
+                        onBitmapLoaded(rescaleBitmap(errorDrawable.toBitmap()))
+                    else
+                        onBitmapError()
                 }
 
                 override fun onLoadCleared(placeholder: Drawable?) {}
@@ -170,15 +170,20 @@ internal fun rescaleBitmap(ogBitmap: Bitmap, maxWidth: Int = 7680, maxHeight: In
     return Bitmap.createScaledBitmap(ogBitmap, nuevoAncho, nuevoAlto, true)
 }
 
-internal fun Context.loadDrawable(image: Image?, callback: (Bitmap?) -> Unit) {
-    image ?: return
+internal fun Context.loadDrawable(
+    image: Image?,
+    @DrawableRes errorDrawable: Int?,
+    callback: (Bitmap?) -> Unit
+) {
 
     val request = Glide.with(this)
     when (image) {
         is Image.Drawable -> request.load(image.drawable)
         is Image.URI -> request.load(image.uri)
         is Image.URL -> request.load(image.url)
+        else -> request.load("")
     }
+        .error(errorDrawable)
         .into(object : CustomTarget<Drawable>() {
             override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
                 callback(resource.toBitmap())  // El drawable está listo, lo pasamos al callback
