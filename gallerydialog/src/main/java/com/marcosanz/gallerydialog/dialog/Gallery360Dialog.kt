@@ -33,7 +33,6 @@ import com.marcosanz.gallerydialog.extension.getSerializableCompat
 import com.marcosanz.gallerydialog.extension.getUIDeviceOrientation
 import com.marcosanz.gallerydialog.extension.invisible
 import com.marcosanz.gallerydialog.extension.isNotNullOrEmpty
-import com.marcosanz.gallerydialog.extension.notNull
 import com.marcosanz.gallerydialog.extension.visible
 import com.marcosanz.gallerydialog.utils.OrientationManager
 import com.panoramagl.PLImage
@@ -82,7 +81,6 @@ class Gallery360Dialog() : DialogFragment() {
     private lateinit var orientationManager: OrientationManager
     private lateinit var options: Gallery360DialogOptions
 
-    private var initialActionbarColor: Int? = null
     private var initialOrientation: Int = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     private var oldUIDeviceOrientation: UIDeviceOrientation
 
@@ -113,11 +111,6 @@ class Gallery360Dialog() : DialogFragment() {
         // 2. Last UIOrientation (for sensorial rotation)
         outState.putSerializable(OLD_UI_ORIENTATION, oldUIDeviceOrientation)
 
-        // 3. Initial actionbar color
-        initialActionbarColor.notNull {
-            outState.putInt(INITIAL_ACTIONBAR_COLOR, it)
-        }
-
         super.onSaveInstanceState(outState)
     }
 
@@ -125,14 +118,10 @@ class Gallery360Dialog() : DialogFragment() {
      * Restores initial configs from orientation changes
      */
     private fun restoreInstanceState(inState: Bundle?) {
-        // 1. Actionbar color
-        initialActionbarColor =
-            inState?.getInt(INITIAL_ACTIONBAR_COLOR) ?: activity?.window?.statusBarColor
-
-        // 2. Orientation
+        // 1. Orientation
         initialOrientation = inState?.getInt(INITIAL_ORIENTATION) ?: initialOrientation
 
-        // 3. UI Orientation
+        // 2. UI Orientation
         oldUIDeviceOrientation =
             inState?.getSerializableCompat(OLD_UI_ORIENTATION, UIDeviceOrientation::class.java)
                 ?: oldUIDeviceOrientation
@@ -392,8 +381,6 @@ class Gallery360Dialog() : DialogFragment() {
     }
 
     override fun onDestroy() {
-        if (initialActionbarColor != null)
-            activity?.window?.statusBarColor = initialActionbarColor!!
         plManager?.onDestroy()
 
         if (activity?.isChangingConfigurations != true)

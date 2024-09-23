@@ -48,7 +48,7 @@ class SampleActivity : AppCompatActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        enableEdgeToEdge()
+        //enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         startPostponedEnterTransition()
         binding = ActivitySampleBinding.inflate(layoutInflater)

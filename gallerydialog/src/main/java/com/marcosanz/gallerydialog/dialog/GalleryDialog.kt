@@ -90,7 +90,6 @@ class GalleryDialog() : DialogFragment() {
     private lateinit var galleryAdapter: GalleryDialogAdapter
 
     private var _isUIVisible: Boolean = true
-    private var initialActionBarColor: Int? = null
     private var _currentImage: Image? = null
 
     private var isHeaderConsumed = false
@@ -367,9 +366,6 @@ class GalleryDialog() : DialogFragment() {
     }
 
     override fun onDestroy() {
-        if (initialActionBarColor != null)
-            activity?.window?.statusBarColor = initialActionBarColor!!
-
         if (activity?.isChangingConfigurations != true)
             orientationManager.displayOrientation = initialOrientation
 
@@ -382,8 +378,6 @@ class GalleryDialog() : DialogFragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putInt(INITIAL_ORIENTATION, initialOrientation)
-        if (initialActionBarColor != null)
-            outState.putInt(INITIAL_ACTIONBAR_COLOR, initialActionBarColor!!)
         super.onSaveInstanceState(outState)
     }
 
@@ -391,12 +385,7 @@ class GalleryDialog() : DialogFragment() {
      * Restores initial configs from orientation changes
      */
     private fun restoreInstanceState(inState: Bundle?) {
-        // 1. Actionbar color
-        inState?.getInt(INITIAL_ACTIONBAR_COLOR)?.let {
-            initialActionBarColor = it
-        }
-
-        // 2. Initial orientation
+        // 1 Initial orientation
         inState?.getInt(INITIAL_ORIENTATION)?.let {
             initialOrientation = it
         }

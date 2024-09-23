@@ -8,6 +8,9 @@
     <style name="Theme.GalleryDialog" parent="Base.Theme.GalleryDialog">
         <item name="android:windowTranslucentNavigation">true</item>
         <item name="android:windowActionBar">false</item>
+        <item name="android:statusBarColor">@android:color/holo_red_light</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowBackground">@android:color/white</item>
     </style>
 
 </resources>
