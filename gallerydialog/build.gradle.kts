@@ -22,6 +22,12 @@ android {
         buildConfig = true
         viewBinding = true
     }
+    publishing {
+        singleVariant("debug") {}
+    }
+    publishing {
+        singleVariant("release") {}
+    }
 
     buildTypes {
         release {
@@ -50,6 +56,7 @@ dependencies {
     implementation(libs.androidx.viewpager2)
     implementation(libs.coil.compose)
     implementation(libs.coil.network)
+    implementation(libs.glide)
     // TouchImageView
     implementation(libs.touchImageView)
 

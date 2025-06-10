@@ -4,15 +4,15 @@ plugins {
 }
 
 android {
-    namespace = "com.marcosanz.app" // Asignación de propiedad
+    namespace = "com.marcosanz.app"
 
     defaultConfig {
         applicationId = "com.marcosanz.app"
         minSdk = 24
         targetSdk = 36
         compileSdk = 36
-        versionCode = 4 // Asignación de propiedad (corrección: debería ser versionCode = 4)
-        versionName = "1.0.4" // Asignación de propiedad
+        versionCode = 4
+        versionName = "1.0.4"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -21,16 +21,22 @@ android {
         buildConfig = true
         viewBinding = true
     }
+
+    publishing {
+        singleVariant("debug") {}
+    }
+    publishing {
+        singleVariant("release") {}
+    }
     buildTypes {
         debug {
-            isDebuggable = true // Asignación de propiedad booleana
+            isDebuggable = true
         }
 
         release {
-            // Corrección de typo: isMinifyEnaled -> isMinifyEnabled
-            isMinifyEnabled = false // Asignación de propiedad booleana
-            isShrinkResources = false // Asignación de propiedad booleana
-            proguardFiles( // Llamada a función
+            isMinifyEnabled = false
+            isShrinkResources = false
+            proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )

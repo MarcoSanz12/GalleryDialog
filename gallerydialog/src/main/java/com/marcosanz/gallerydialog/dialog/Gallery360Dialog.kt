@@ -5,7 +5,6 @@ import android.app.Dialog
 import android.content.pm.ActivityInfo
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.view.GestureDetector
@@ -28,7 +27,7 @@ import androidx.fragment.app.FragmentManager
 import com.marcosanz.gallerydialog.R
 import com.marcosanz.gallerydialog.databinding.DlgGallery360Binding
 import com.marcosanz.gallerydialog.entity.Image
-import com.marcosanz.gallerydialog.extension.getBitmap
+import com.marcosanz.gallerydialog.extension.getBitmapWithCoil
 import com.marcosanz.gallerydialog.extension.getParcelableCompat
 import com.marcosanz.gallerydialog.extension.getSerializableCompat
 import com.marcosanz.gallerydialog.extension.getUIDeviceOrientation
@@ -42,6 +41,7 @@ import com.panoramagl.PLSphericalPanorama
 import com.panoramagl.ios.enumerations.UIDeviceOrientation
 import java.util.concurrent.TimeUnit
 import androidx.core.graphics.drawable.toDrawable
+import com.marcosanz.gallerydialog.extension.getBitmapWithGlide
 
 
 class Gallery360Dialog() : DialogFragment() {
@@ -175,7 +175,7 @@ class Gallery360Dialog() : DialogFragment() {
         else
             null
         binding = DlgGallery360Binding.inflate(inflater, null, false)
-        image.getBitmap(
+        image.getBitmapWithGlide(
             requireContext(),
             errorDrawable,
             ::onPanoramaLoaded,
@@ -203,7 +203,6 @@ class Gallery360Dialog() : DialogFragment() {
             panorama.setImage(PLImage(bitmap))
             this.panorama = panorama
 
-            return@apply
             isAcceleratedTouchScrollingEnabled = true
             activateOrientation()
 

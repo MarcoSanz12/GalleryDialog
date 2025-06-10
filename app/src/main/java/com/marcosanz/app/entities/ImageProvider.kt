@@ -22,9 +22,9 @@ object ImageProvider {
             alt = "Famous spanish youtuber Willyrex"
         ),
         ImageURL(
-            thumbnail = "https://brobible.com/wp-content/uploads/2022/05/its-morbin-time.jpg",
-            url = "https://brobible.com/wp-content/uploads/2022/05/its-morbin-time.jpg",
-            alt = "Doctor Michael Morbius from the comic series Batman"
+            thumbnail = "https://canarygreendes.grupotecopy.es/sites/default/files/2025-02/26P0004F1.jpg",
+            url = "https://canarygreendes.grupotecopy.es/sites/default/files/2025-02/26P0004F1.jpg",
+            alt = "Picture original size 12000 x 9000"
         )
     )
 

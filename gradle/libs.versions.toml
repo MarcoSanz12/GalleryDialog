@@ -13,7 +13,7 @@ kotlinStdlib = "2.1.21"
 material = "1.12.0"
 activity = "1.10.1"
 constraintlayout = "2.2.1"
-panoramagl = "1.10.3"
+panoramagl = "1.12"
 #panoramagl = "1.0.0"
 recyclerview = "1.4.0"
 touchimageview = "3.6"
@@ -37,10 +37,13 @@ androidx-activity = { group = "androidx.activity", name = "activity", version.re
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 
 # COIL3 ( sustituto de glide )
-coil_compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
+coil_compose = { group = "io.coil-kt.coil3", name = "coil", version.ref = "coil" }
 coil_network = { group = "io.coil-kt.coil3", name = "coil-network-okhttp", version.ref = "coil" }
 
-panoramagl = { module = "com.github.MarcoSanz12:panoramaGL", version.ref = "panoramagl" }
+# GLIDE
+glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
+
+panoramagl = { module = "com.github.hannesa2:panoramagl", version.ref = "panoramagl" }
 touchImageView = { module = "com.github.MikeOrtiz:TouchImageView", version.ref = "touchimageview" }
 
 
@@ -48,5 +51,4 @@ touchImageView = { module = "com.github.MikeOrtiz:TouchImageView", version.ref =
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
-parcelize = { id = "kotlin-parcelize", version.ref = "kotlin" }
 

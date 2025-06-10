@@ -19,15 +19,19 @@ import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.FileProvider
+import androidx.core.graphics.createBitmap
+import androidx.core.graphics.scale
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import coil3.asDrawable
 import coil3.imageLoader
-import coil3.load
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import coil3.request.error
 import coil3.toBitmap
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.marcosanz.gallerydialog.entity.Image
 import com.marcosanz.gallerydialog.utils.Constant
 import com.panoramagl.ios.enumerations.UIDeviceOrientation
@@ -37,8 +41,6 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import androidx.core.graphics.scale
-import androidx.core.graphics.createBitmap
 
 
 internal fun View.visible(animate: Boolean = false, y: Float? = null) {
@@ -85,7 +87,7 @@ internal fun ImageView.loadFromImage(
 }
 
 
-internal fun Image?.getBitmap(
+internal fun Image?.getBitmapWithCoil(
     context: Context,
     errorDrawable: Drawable? = null,
     onBitmapLoaded: (Bitmap) -> Unit,
@@ -124,6 +126,47 @@ internal fun Image?.getBitmap(
             .build()
 
         context.imageLoader.enqueue(request)
+    } catch (ex: Exception) {
+        ex.printStackTrace()
+        onBitmapError()
+    }
+}
+
+
+internal fun Image?.getBitmapWithGlide(
+    context: Context,
+    errorDrawable: Drawable? = null,
+    onBitmapLoaded: (Bitmap) -> Unit, onBitmapError: () -> Unit
+) {
+    if (this == null) {
+        onBitmapError()
+        return
+    }
+
+    try {
+        val request = Glide.with(context).asBitmap()
+        when (this) {
+            is Image.Drawable -> request.load(this.drawable)
+            is Image.URI -> request.load(this.uri)
+            is Image.URL -> request.load(this.url)
+        }
+            .error(errorDrawable)
+            .into(object : CustomTarget<Bitmap>() {
+                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                    onBitmapLoaded(rescaleBitmap(resource))
+                }
+
+                override fun onLoadFailed(errorDrawable: Drawable?) {
+                    super.onLoadFailed(errorDrawable)
+
+                    if (errorDrawable != null)
+                        onBitmapLoaded(rescaleBitmap(errorDrawable.toBitmap()))
+                    else
+                        onBitmapError()
+                }
+
+                override fun onLoadCleared(placeholder: Drawable?) {}
+            })
     } catch (ex: Exception) {
         ex.printStackTrace()
         onBitmapError()

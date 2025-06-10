@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.marcosanz.gallerydialog.R
 import com.marcosanz.gallerydialog.databinding.ItemGalleryBinding
 import com.marcosanz.gallerydialog.entity.Image
-import com.marcosanz.gallerydialog.extension.getBitmap
+import com.marcosanz.gallerydialog.extension.getBitmapWithCoil
 
 
 internal class GalleryDialogAdapter(
@@ -58,7 +58,7 @@ internal class GalleryDialogAdapter(
                     doubleTapScale = 2f
                     maxZoom = 5f
                     isSuperZoomEnabled = true
-                    image.getBitmap(
+                    image.getBitmapWithCoil(
                         context = context,
                         errorDrawable = errorDrawable,
                         onBitmapLoaded = {
