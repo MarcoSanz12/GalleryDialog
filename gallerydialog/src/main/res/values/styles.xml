@@ -22,6 +22,6 @@
         <item name="iconTint">@color/gallerybutton_icon_tint</item>
         <item name="iconGravity">textStart</item>
         <item name="layout_constraintDimensionRatio">1:1</item>
-
     </style>
+
 </resources>

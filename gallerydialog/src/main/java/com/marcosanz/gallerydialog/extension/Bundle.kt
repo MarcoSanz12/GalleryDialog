@@ -1,34 +1,22 @@
 package com.marcosanz.gallerydialog.extension
 
-import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
+import androidx.core.os.BundleCompat
 import java.io.Serializable
 
-internal inline fun <reified T : Parcelable> Bundle?.getParcelableArrayListCompat(
+internal inline fun <reified T : Parcelable> Bundle.getParcelableArrayListCompat(
     key: String,
     clazz: Class<out T>
-): java.util.ArrayList<T>? =
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-        this?.getParcelableArrayList(key, clazz)
-    else
-        this?.getParcelableArrayList(key)
+): java.util.ArrayList<T>? = BundleCompat.getParcelableArrayList(this, key, clazz)
 
-internal inline fun <reified T: Parcelable> Bundle?.getParcelableCompat(
+internal inline fun <reified T : Parcelable> Bundle.getParcelableCompat(
     key: String,
     clazz: Class<out T>
-): T? =
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-        this?.getParcelable(key, clazz)
-    else
-        this?.getParcelable(key)
+): T? = BundleCompat.getParcelable(this, key, clazz)
 
-internal inline fun <reified T : Serializable> Bundle.getSerializableCompat(key:String, clazz: Class<out T>): T? {
-    return if (Build.VERSION.SDK_INT >= 33) {
-        getSerializable(key,clazz)
-    } else {
-        @Suppress("DEPRECATION")
-        getSerializable(key) as? T
-    }
-}
+internal inline fun <reified T : Serializable> Bundle.getSerializableCompat(
+    key: String,
+    clazz: Class<out T>
+): T? = BundleCompat.getSerializable(this, key, clazz)
 

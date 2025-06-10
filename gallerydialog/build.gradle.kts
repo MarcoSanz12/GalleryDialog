@@ -1,0 +1,73 @@
+import com.android.build.gradle.LibraryExtension
+
+plugins {
+    id("com.android.library")
+    id("org.jetbrains.kotlin.android")
+    id("kotlin-kapt")
+    id("maven-publish")
+    id("kotlin-parcelize")
+}
+
+android {
+    namespace = "com.marcosanz.gallerydialog"
+
+    defaultConfig {
+        minSdk = 24
+        compileSdk = 36
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+
+    buildFeatures {
+        buildConfig = true
+        viewBinding = true
+    }
+
+    buildTypes {
+        release {
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile ("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
+    }
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_21.toString()
+    }
+}
+dependencies {
+    // BASIC
+    implementation(libs.kotlin.stdlib)
+    implementation(libs.androidx.fragment.ktx)
+    implementation(libs.material)
+    implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.recyclerview)
+    implementation(libs.androidx.viewpager2)
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network)
+    // TouchImageView
+    implementation(libs.touchImageView)
+
+    // VRImageView
+    implementation(libs.panoramagl)
+
+}
+
+
+project.afterEvaluate {
+    the<LibraryExtension>().libraryVariants.forEach { variant ->
+        the<PublishingExtension>().publications {
+            create<MavenPublication>(variant.name) {
+                from(components.findByName(variant.name))
+                groupId = "com.marcosanz"
+                artifactId = "gallerydialog"
+                version = "1.0.0"
+            }
+        }
+    }
+}

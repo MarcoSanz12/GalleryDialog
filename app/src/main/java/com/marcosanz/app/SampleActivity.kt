@@ -1,12 +1,9 @@
 package com.marcosanz.app
 
-import android.net.Uri
 import android.os.Bundle
-import android.widget.ImageView
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.doOnPreDraw
-import com.bumptech.glide.Glide
+import coil3.load
 import com.marcosanz.app.databinding.ActivitySampleBinding
 import com.marcosanz.app.entities.ImageDrawable
 import com.marcosanz.app.entities.ImageProvider.getImagesUri
@@ -19,7 +16,6 @@ import com.marcosanz.app.entities.ImageURL
 import com.marcosanz.gallerydialog.dialog.Gallery360Dialog
 import com.marcosanz.gallerydialog.dialog.GalleryDialog
 
-
 class SampleActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySampleBinding
@@ -28,10 +24,10 @@ class SampleActivity : AppCompatActivity() {
         getImagesUri(
             this, "com.marcosanz.app",
             drawableRes =
-            listOf(
-                R.drawable.cuellar_pueblo1,
-                R.drawable.cuellar_pueblo2
-            )
+                listOf(
+                    R.drawable.cuellar_pueblo1,
+                    R.drawable.cuellar_pueblo2
+                )
         )
     }
 
@@ -39,10 +35,10 @@ class SampleActivity : AppCompatActivity() {
         getImagesUri(
             this, "com.marcosanz.app",
             drawableRes =
-            listOf(
-                R.drawable.image360_3,
-                R.drawable.image360_4
-            )
+                listOf(
+                    R.drawable.image360_3,
+                    R.drawable.image360_4
+                )
         )
     }
 
@@ -63,21 +59,17 @@ class SampleActivity : AppCompatActivity() {
     }
 
 
-    private fun ImageView.loadFromUrl(url: String?) = Glide.with(this).load(url).into(this)
-
-    private fun ImageView.loadFromUri(uri: Uri?) = Glide.with(this).load(uri).into(this)
-
     private fun prepareImages() =
         with(binding) {
             ivImageUrl1.run {
-                loadFromUrl(imagesUrl[0].thumbnail)
+                load(imagesUrl[0].thumbnail)
                 setOnClickListener {
                     showGalleryDialogURL(imagesUrl)
                 }
 
             }
             ivImageUrl2.run {
-                loadFromUrl(imagesUrl[1].thumbnail)
+                load(imagesUrl[1].thumbnail)
                 setOnClickListener {
                     showGalleryDialogURL(imagesUrl, 1)
                 }
@@ -96,13 +88,13 @@ class SampleActivity : AppCompatActivity() {
             }
 
             ivImageUri1.run {
-                loadFromUri(imagesUri[0].thumbnail)
+                load(imagesUri[0].thumbnail)
                 setOnClickListener {
                     showGalleryDialogURI(imagesUri)
                 }
             }
             ivImageUri2.run {
-                loadFromUri(imagesUri[1].thumbnail)
+                load(imagesUri[1].thumbnail)
                 setOnClickListener {
                     showGalleryDialogURI(imagesUri, 1)
                 }
@@ -112,14 +104,14 @@ class SampleActivity : AppCompatActivity() {
     private fun prepareImages360() =
         with(binding) {
             ivImage360Url1.run {
-                loadFromUrl(images360Url[0].thumbnail)
+                load(images360Url[0].thumbnail)
                 setOnClickListener {
                     showGalleryDialog360URL(0)
                 }
 
             }
             ivImage360Url2.run {
-                loadFromUrl(images360Url[1].thumbnail)
+                load(images360Url[1].thumbnail)
                 setOnClickListener {
                     showGalleryDialog360URL(1)
                 }
@@ -138,13 +130,13 @@ class SampleActivity : AppCompatActivity() {
             }
 
             ivImage360Uri1.run {
-                loadFromUri(images360Uri[0].thumbnail)
+                load(images360Uri[0].thumbnail)
                 setOnClickListener {
                     showGalleryDialog360Uri(0)
                 }
             }
             ivImage360Uri2.run {
-                loadFromUri(images360Uri[1].thumbnail)
+                load(images360Uri[1].thumbnail)
                 setOnClickListener {
                     showGalleryDialog360Uri(1)
                 }
@@ -193,8 +185,8 @@ class SampleActivity : AppCompatActivity() {
     private fun showGalleryDialog360URL(position: Int) =
         Gallery360Dialog.Builder
             .createWithUrl(
-                /*url = images360Url[position].url,
-                alt = images360Url[position].alt*/
+                url = images360Url[position].url,
+                alt = images360Url[position].alt
             )
             .setErrorMessage("Error loading the image")
             .setErrorDrawable(R.drawable.cuellar1)

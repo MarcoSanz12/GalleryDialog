@@ -125,7 +125,7 @@ class GalleryDialog() : DialogFragment() {
         setStyle(STYLE_NORMAL, R.style.GalleryDialogTheme)
 
         // 1. Image list
-        images = arguments.getParcelableArrayListCompat(ARG_IMAGES, Image::class.java)?.toList()
+        images = arguments?.getParcelableArrayListCompat(ARG_IMAGES, Image::class.java)?.toList()
             ?: emptyList()
 
         // To allow for errorDrawable to show up

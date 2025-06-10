@@ -17,19 +17,19 @@ import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.FileProvider
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.target.Target
-import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
-import com.bumptech.glide.request.transition.Transition
+import coil3.asDrawable
+import coil3.imageLoader
+import coil3.load
+import coil3.request.ImageRequest
+import coil3.request.crossfade
+import coil3.request.error
+import coil3.toBitmap
 import com.marcosanz.gallerydialog.entity.Image
+import com.marcosanz.gallerydialog.utils.Constant
 import com.panoramagl.ios.enumerations.UIDeviceOrientation
 import java.io.File
 import java.io.FileOutputStream
@@ -37,6 +37,8 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import androidx.core.graphics.scale
+import androidx.core.graphics.createBitmap
 
 
 internal fun View.visible(animate: Boolean = false, y: Float? = null) {
@@ -60,68 +62,34 @@ internal fun ImageView.loadFromImage(
     onResourceReady: (Drawable?) -> Unit
 ) {
 
-    if (image == null) {
-        this.setImageDrawable(defaultDrawable)
-        return
-    }
-
-    val request = Glide.with(this)
-    when (image) {
-        is Image.Drawable -> request.load(image.drawable)
-        is Image.URI -> request.load(image.uri)
-        is Image.URL -> request.load(image.url)
-    }
-        .transition(
-            DrawableTransitionOptions.withCrossFade(
-                DrawableCrossFadeFactory.Builder().setCrossFadeEnabled(true)
-            )
-        )
+    val request = ImageRequest.Builder(context).data(
+        when (image) {
+            is Image.Drawable -> image.drawable
+            is Image.URI -> image.uri
+            is Image.URL -> image.url
+            else -> null
+        }
+    )
+        .crossfade(true)
         .error(defaultDrawable)
-        .listener(object : RequestListener<Drawable> {
-            override fun onLoadFailed(
-                e: GlideException?,
-                model: Any?,
-                target: Target<Drawable>,
-                isFirstResource: Boolean
-            ): Boolean {
-                onResourceReady(null)
-                return false
+        .target(
+            onSuccess = { result ->
+                onResourceReady(result.asDrawable(resources))
+            },
+            onError = { result ->
+                onResourceReady(result?.asDrawable(resources))
             }
+        ).build()
 
-            override fun onResourceReady(
-                resource: Drawable,
-                model: Any,
-                target: Target<Drawable>?,
-                dataSource: DataSource,
-                isFirstResource: Boolean
-            ): Boolean {
-                onResourceReady(resource)
-                return false
-            }
-
-        })
-        .into(object : CustomTarget<Drawable?>() {
-            override fun onResourceReady(
-                resource: Drawable,
-                transition: Transition<in Drawable?>?
-            ) {
-                setImageDrawable(resource)
-            }
-
-            override fun onLoadFailed(errorDrawable: Drawable?) {
-                setImageDrawable(errorDrawable)
-            }
-
-            override fun onLoadCleared(placeholder: Drawable?) {
-
-            }
-        })
+    context.imageLoader.enqueue(request)
 }
+
 
 internal fun Image?.getBitmap(
     context: Context,
     errorDrawable: Drawable? = null,
-    onBitmapLoaded: (Bitmap) -> Unit, onBitmapError: () -> Unit
+    onBitmapLoaded: (Bitmap) -> Unit,
+    onBitmapError: () -> Unit
 ) {
     if (this == null) {
         onBitmapError()
@@ -129,45 +97,53 @@ internal fun Image?.getBitmap(
     }
 
     try {
-        val request = Glide.with(context).asBitmap()
-        when (this) {
-            is Image.Drawable -> request.load(this.drawable)
-            is Image.URI -> request.load(this.uri)
-            is Image.URL -> request.load(this.url)
-        }
+        val request = ImageRequest.Builder(context).data(
+            when (this) {
+                is Image.Drawable -> this.drawable
+                is Image.URI -> this.uri
+                is Image.URL -> this.url
+            }
+        )
             .error(errorDrawable)
-            .into(object : CustomTarget<Bitmap>() {
-                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                    onBitmapLoaded(rescaleBitmap(resource))
-                }
+            .target(
+                onSuccess = { result ->
+                    val bitmap = rescaleBitmap(result.toBitmap())
+                    onBitmapLoaded(bitmap)
+                },
+                onError = { result ->
+                    val bitmap = (result as? BitmapDrawable)?.bitmap?.let {
+                        rescaleBitmap(it)
+                    }
 
-                override fun onLoadFailed(errorDrawable: Drawable?) {
-                    super.onLoadFailed(errorDrawable)
-
-                    if (errorDrawable != null)
-                        onBitmapLoaded(rescaleBitmap(errorDrawable.toBitmap()))
+                    if (bitmap != null)
+                        onBitmapLoaded(bitmap)
                     else
                         onBitmapError()
                 }
+            )
+            .build()
 
-                override fun onLoadCleared(placeholder: Drawable?) {}
-            })
+        context.imageLoader.enqueue(request)
     } catch (ex: Exception) {
         ex.printStackTrace()
         onBitmapError()
     }
 }
 
-internal fun rescaleBitmap(ogBitmap: Bitmap, maxWidth: Int = 7680, maxHeight: Int = 4320): Bitmap {
+internal fun rescaleBitmap(
+    ogBitmap: Bitmap,
+    maxWidth: Int = Constant.MAX_WIDTH,
+    maxHeight: Int = Constant.MAX_HEIGHT
+): Bitmap {
     if (ogBitmap.width <= maxWidth && ogBitmap.height <= maxHeight) {
         return ogBitmap // Rescaling unnecesary
     }
 
     val ratio = minOf(maxWidth.toFloat() / ogBitmap.width, maxHeight.toFloat() / ogBitmap.height)
-    val nuevoAncho = (ogBitmap.width * ratio).toInt()
-    val nuevoAlto = (ogBitmap.height * ratio).toInt()
+    val newWidth = (ogBitmap.width * ratio).toInt()
+    val newHeight = (ogBitmap.height * ratio).toInt()
 
-    return Bitmap.createScaledBitmap(ogBitmap, nuevoAncho, nuevoAlto, true)
+    return ogBitmap.scale(newWidth, newHeight)
 }
 
 internal fun Context.loadDrawable(
@@ -175,28 +151,36 @@ internal fun Context.loadDrawable(
     @DrawableRes errorDrawable: Int?,
     callback: (Bitmap?) -> Unit
 ) {
+    try {
+        var builder = ImageRequest.Builder(this).data(
+            when (image) {
+                is Image.Drawable -> image.drawable
+                is Image.URI -> image.uri
+                is Image.URL -> image.url
+                else -> null
+            }
+        )
+        errorDrawable?.let {
+            builder = builder.error(it)
+        }
 
-    val request = Glide.with(this)
-    when (image) {
-        is Image.Drawable -> request.load(image.drawable)
-        is Image.URI -> request.load(image.uri)
-        is Image.URL -> request.load(image.url)
-        else -> request.load("")
+        val request = builder.target(
+            onSuccess = { result ->
+                callback(result.toBitmap())  // Drawable is ready, sending it to callback
+            },
+            onError = { result ->
+                callback(result?.toBitmap())  // If it fails, send the error drawable
+            }
+        ).build()
+
+
+        imageLoader.enqueue(request)
+    } catch (ex: Exception) {
+        ex.printStackTrace()
+        errorDrawable?.let {
+            callback(AppCompatResources.getDrawable(this, it)?.toBitmap())
+        }
     }
-        .error(errorDrawable)
-        .into(object : CustomTarget<Drawable>() {
-            override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
-                callback(resource.toBitmap())  // El drawable está listo, lo pasamos al callback
-            }
-
-            override fun onLoadCleared(placeholder: Drawable?) {
-                // Lógica para limpiar si es necesario
-            }
-
-            override fun onLoadFailed(errorDrawable: Drawable?) {
-                callback(errorDrawable?.toBitmap())  // Si falla, pasamos el drawable de error
-            }
-        })
 }
 
 internal fun Drawable.toBitmap(): Bitmap {
@@ -204,7 +188,7 @@ internal fun Drawable.toBitmap(): Bitmap {
         return this.bitmap
 
 
-    val bitmap = Bitmap.createBitmap(intrinsicWidth, intrinsicHeight, Bitmap.Config.ARGB_8888)
+    val bitmap = createBitmap(intrinsicWidth, intrinsicHeight)
     val canvas = Canvas(bitmap)
     setBounds(0, 0, canvas.width, canvas.height)
     draw(canvas)

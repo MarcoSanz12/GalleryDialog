@@ -1,5 +1,6 @@
 package com.marcosanz.gallerydialog.dialog
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.pm.ActivityInfo
 import android.graphics.Bitmap
@@ -40,6 +41,7 @@ import com.panoramagl.PLManager
 import com.panoramagl.PLSphericalPanorama
 import com.panoramagl.ios.enumerations.UIDeviceOrientation
 import java.util.concurrent.TimeUnit
+import androidx.core.graphics.drawable.toDrawable
 
 
 class Gallery360Dialog() : DialogFragment() {
@@ -140,7 +142,7 @@ class Gallery360Dialog() : DialogFragment() {
         ) ?: Gallery360DialogOptions()
 
         // 2. Image
-        image = arguments.getParcelableCompat(ARG_IMAGE, Image::class.java) ?: Image.URL("xd", "xd")
+        image = arguments?.getParcelableCompat(ARG_IMAGE, Image::class.java) ?: Image.URL("", "")
 
         orientationManager = OrientationManager(requireActivity())
         if (savedInstanceState == null)
@@ -152,7 +154,7 @@ class Gallery360Dialog() : DialogFragment() {
         return super.onCreateDialog(savedInstanceState).also {
             it.window?.let { wdw ->
                 wdw.requestFeature(Window.FEATURE_NO_TITLE)
-                wdw.setBackgroundDrawable(ColorDrawable(Color.BLACK))
+                wdw.setBackgroundDrawable(Color.BLACK.toDrawable())
                 wdw.setLayout(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT
@@ -191,6 +193,7 @@ class Gallery360Dialog() : DialogFragment() {
         return binding.root
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun onPanoramaLoaded(bitmap: Bitmap) {
         plManager = PLManager(requireContext())
         plManager?.apply {
@@ -199,6 +202,8 @@ class Gallery360Dialog() : DialogFragment() {
             val panorama = PLSphericalPanorama()
             panorama.setImage(PLImage(bitmap))
             this.panorama = panorama
+
+            return@apply
             isAcceleratedTouchScrollingEnabled = true
             activateOrientation()
 
@@ -465,7 +470,6 @@ class Gallery360Dialog() : DialogFragment() {
         private const val ARG_OPTIONS = "arg_options"
         private const val INITIAL_ORIENTATION = "INITIAL_ORIENTATION"
         private const val OLD_UI_ORIENTATION = "INITIAL_UI_ORIENTATION"
-        private const val INITIAL_ACTIONBAR_COLOR = "INITIAL_ACTIONBAR_COLOR"
 
         /**
          * Creates a new instance of [Gallery360Dialog].

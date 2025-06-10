@@ -15,9 +15,3 @@ internal inline fun <T> sdk29AndUp(onSdk29: () -> T): T? =
         onSdk29()
     else
         null
-
-internal inline fun executeIfApiLessThanS(action: () -> Unit) {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
-        action()
-    }
-}

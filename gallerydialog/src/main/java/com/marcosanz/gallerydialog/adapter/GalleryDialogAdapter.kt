@@ -7,11 +7,12 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.graphics.drawable.toDrawable
 import androidx.recyclerview.widget.RecyclerView
 import com.marcosanz.gallerydialog.R
 import com.marcosanz.gallerydialog.databinding.ItemGalleryBinding
 import com.marcosanz.gallerydialog.entity.Image
-import com.marcosanz.gallerydialog.extension.loadFromImage
+import com.marcosanz.gallerydialog.extension.getBitmap
 
 
 internal class GalleryDialogAdapter(
@@ -57,10 +58,20 @@ internal class GalleryDialogAdapter(
                     doubleTapScale = 2f
                     maxZoom = 5f
                     isSuperZoomEnabled = true
-                    loadFromImage(image = image, defaultDrawable = errorDrawable) { drw ->
-                        if (drw != null)
-                            loadedDrawables[position] = drw
-                    }
+                    image.getBitmap(
+                        context = context,
+                        errorDrawable = errorDrawable,
+                        onBitmapLoaded = {
+                            loadedDrawables[position] = it.toDrawable(resources)
+                            this.setImageBitmap(it)
+                        },
+                        onBitmapError = {
+                            errorDrawable?.let {
+                                loadedDrawables[position] = it
+                                this.setImageDrawable(it)
+                            }
+                        })
+
                     setOnDoubleTapListener(object : OnDoubleTapListener {
                         override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
                             onSingleTap()

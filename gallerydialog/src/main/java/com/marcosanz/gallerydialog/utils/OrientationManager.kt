@@ -1,12 +1,8 @@
 package com.marcosanz.gallerydialog.utils
 
 import android.app.Activity
-import android.content.Context
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
-import android.view.Surface
-import android.view.WindowManager
-import com.marcosanz.gallerydialog.extension.getDisplayRotation
 
 internal class OrientationManager(
     private val activity: Activity
