@@ -1,7 +1,7 @@
 <resources>
     <string name="menu_share">Aktie</string>
     <string name="menu_download">Speichern</string>
-    <string name="saving_picture">Bild wird gespeichert...</string>
+    <string name="saving_picture">Bild wird gespeichert…</string>
     <string name="picture_saved">Bild gespeichert</string>
     <string name="saving_error">Beim Speichern des Bildes ist ein Problem aufgetreten</string>
     <string name="loading_error">Beim Laden des Bildes ist ein Problem aufgetreten</string>

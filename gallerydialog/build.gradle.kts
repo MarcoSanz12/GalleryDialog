@@ -1,5 +1,3 @@
-import com.android.build.gradle.LibraryExtension
-
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
@@ -33,7 +31,7 @@ android {
         release {
             isMinifyEnabled = false
             proguardFiles(
-                getDefaultProguardFile ("proguard-android-optimize.txt"),
+                getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
         }
@@ -65,15 +63,16 @@ dependencies {
 
 }
 
+publishing {
+    publications {
+        create<MavenPublication>("release") {
+            groupId = "com.marcosanz"
+            artifactId = "gallerydialog"
+            version = "1.0.0"
 
-project.afterEvaluate {
-    the<LibraryExtension>().libraryVariants.forEach { variant ->
-        the<PublishingExtension>().publications {
-            create<MavenPublication>(variant.name) {
-                from(components.findByName(variant.name))
-                groupId = "com.marcosanz"
-                artifactId = "gallerydialog"
-                version = "1.0.0"
+            // 'from' debe ir fuera del afterEvaluate, pero puede necesitarlo si el componente aún no existe
+            afterEvaluate {
+                from(components.findByName("release") ?: return@afterEvaluate)
             }
         }
     }

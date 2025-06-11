@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- values-eu/strings.xml -->
+<resources>
+    <string name="menu_share">Partekatu</string>
+    <string name="menu_download">Gorde</string>
+    <string name="saving_picture">Irudia gordetzen…</string>
+    <string name="picture_saved">Irudia gordeta</string>
+    <string name="saving_error">Arazo bat gertatu da irudia gordetzean</string>
+    <string name="loading_error">Arazo bat gertatu da irudia kargatzean</string>
+
+    <!-- Tooltips -->
+    <string name="tooltip_sensorial_rotation">Biraketa sentsoriala</string>
+    <string name="tooltip_rotate">Biratu</string>
+    <string name="tooltip_options">Aukerak</string>
+</resources>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- values-it/strings.xml -->
+<resources>
+    <string name="menu_share">Condividi</string>
+    <string name="menu_download">Salva</string>
+    <string name="saving_picture">Salvataggio immagine…</string>
+    <string name="picture_saved">Immagine salvata</string>
+    <string name="saving_error">Si è verificato un problema durante il salvataggio dell\'immagine</string>
+    <string name="loading_error">Si è verificato un problema durante il caricamento dell\'immagine</string>
+
+    <!-- Tooltips -->
+    <string name="tooltip_sensorial_rotation">Rotazione sensoriale</string>
+    <string name="tooltip_rotate">Ruota</string>
+    <string name="tooltip_options">Opzioni</string>
+</resources>

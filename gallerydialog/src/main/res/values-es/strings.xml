@@ -1,7 +1,7 @@
 <resources>
     <string name="menu_share">Compartir</string>
     <string name="menu_download">Guardar</string>
-    <string name="saving_picture">Guardando imagen...</string>
+    <string name="saving_picture">Guardando imagen…</string>
     <string name="picture_saved">Imagen guardada</string>
     <string name="saving_error">Error al guardar la imagen</string>
     <string name="loading_error">Error al cargar la imagen</string>

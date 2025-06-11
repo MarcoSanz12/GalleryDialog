@@ -1,7 +1,7 @@
 <resources>
     <string name="menu_share">Partager</string>
     <string name="menu_download">Sauvegarder</string>
-    <string name="saving_picture">Sauvegarde de l\'image...</string>
+    <string name="saving_picture">Sauvegarde de l\'image…</string>
     <string name="picture_saved">Photo enregistrée</string>
     <string name="saving_error">Un problème est survenu lors de l\'enregistrement de l\'image</string>
     <string name="loading_error">Un problème est survenu lors du chargement de l\'image</string>

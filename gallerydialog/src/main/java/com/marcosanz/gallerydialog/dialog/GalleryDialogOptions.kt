@@ -53,6 +53,11 @@ internal data class GalleryDialogOptions(
     val messageErrorDownload: String? = null,
 
     /**
+     * Indicates if the download button should be shown
+     */
+    val isDownloadEnabled : Boolean = true,
+
+    /**
      * Image resource shown if the image loading fails
      */
     @DrawableRes

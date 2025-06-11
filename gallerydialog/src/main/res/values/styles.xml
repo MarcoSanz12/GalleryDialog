@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <style name="GalleryDialogTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="GalleryDialogTheme" parent="Theme.Material3.Light.NoActionBar">
         <item name="android:windowTranslucentNavigation">true</item>
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:fitsSystemWindows">true</item>
+    </style>
+
+    <style name="GalleryPopupTheme" parent="Widget.Material3.PopupMenu">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
     <style name="GalleryButton" parent="Widget.Material3.Button.IconButton.Filled">
@@ -19,6 +23,7 @@
         <item name="android:insetBottom">0dp</item>
         <item name="android:insetLeft">0dp</item>
         <item name="android:insetRight">0dp</item>
+        <item name="android:stateListAnimator">@animator/animator_button</item>
         <item name="iconTint">@color/gallerybutton_icon_tint</item>
         <item name="iconGravity">textStart</item>
         <item name="layout_constraintDimensionRatio">1:1</item>

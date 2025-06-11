@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- values-zh-rCN/strings.xml -->
+<resources>
+    <string name="menu_share">分享</string>
+    <string name="menu_download">保存</string>
+    <string name="saving_picture">正在保存图片…</string>
+    <string name="picture_saved">图片已保存</string>
+    <string name="saving_error">保存图片时出现问题</string>
+    <string name="loading_error">加载图片时出现问题</string>
+
+    <!-- Tooltips -->
+    <string name="tooltip_sensorial_rotation">感应旋转</string>
+    <string name="tooltip_rotate">旋转</string>
+    <string name="tooltip_options">选项</string>
+</resources>

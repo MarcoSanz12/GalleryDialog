@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="menu_share">Delen</string>
+    <string name="menu_download">Opslaan</string>
+    <string name="saving_picture">Afbeelding opslaan…</string>
+    <string name="picture_saved">Afbeelding opgeslagen</string>
+    <string name="saving_error">Er is een probleem opgetreden bij het opslaan van de afbeelding</string>
+    <string name="loading_error">Er is een probleem opgetreden bij het laden van de afbeelding</string>
+
+    <!-- Tooltips -->
+    <string name="tooltip_sensorial_rotation">Sensoriële rotatie</string>
+    <string name="tooltip_rotate">Draaien</string>
+    <string name="tooltip_options">Opties</string>
+</resources>

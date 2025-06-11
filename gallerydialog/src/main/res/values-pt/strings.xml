@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- values-pt/strings.xml (Portugués de Portugal) -->
+<resources>
+    <string name="menu_share">Partilhar</string>
+    <string name="menu_download">Guardar</string>
+    <string name="saving_picture">A guardar imagem…</string>
+    <string name="picture_saved">Imagem guardada</string>
+    <string name="saving_error">Ocorreu um problema ao guardar a imagem</string>
+    <string name="loading_error">Ocorreu um problema ao carregar a imagem</string>
+
+    <!-- Tooltips -->
+    <string name="tooltip_sensorial_rotation">Rotação sensorial</string>
+    <string name="tooltip_rotate">Rodar</string>
+    <string name="tooltip_options">Opções</string>
+</resources>

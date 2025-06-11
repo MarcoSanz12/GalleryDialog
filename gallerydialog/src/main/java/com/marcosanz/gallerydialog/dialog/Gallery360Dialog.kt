@@ -16,6 +16,7 @@ import android.view.Window
 import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.graphics.drawable.toDrawable
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -27,7 +28,7 @@ import androidx.fragment.app.FragmentManager
 import com.marcosanz.gallerydialog.R
 import com.marcosanz.gallerydialog.databinding.DlgGallery360Binding
 import com.marcosanz.gallerydialog.entity.Image
-import com.marcosanz.gallerydialog.extension.getBitmapWithCoil
+import com.marcosanz.gallerydialog.extension.getBitmapWithGlide
 import com.marcosanz.gallerydialog.extension.getParcelableCompat
 import com.marcosanz.gallerydialog.extension.getSerializableCompat
 import com.marcosanz.gallerydialog.extension.getUIDeviceOrientation
@@ -40,8 +41,6 @@ import com.panoramagl.PLManager
 import com.panoramagl.PLSphericalPanorama
 import com.panoramagl.ios.enumerations.UIDeviceOrientation
 import java.util.concurrent.TimeUnit
-import androidx.core.graphics.drawable.toDrawable
-import com.marcosanz.gallerydialog.extension.getBitmapWithGlide
 
 
 class Gallery360Dialog() : DialogFragment() {
@@ -105,6 +104,9 @@ class Gallery360Dialog() : DialogFragment() {
 
         dialog?.setCanceledOnTouchOutside(false)
     }
+
+
+    override fun getTheme(): Int = R.style.GalleryDialogTheme
 
     override fun onSaveInstanceState(outState: Bundle) {
         // 1. Initial screen orientation

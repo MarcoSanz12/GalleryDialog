@@ -1,7 +1,6 @@
 package com.marcosanz.gallerydialog.extension
 
 import android.os.Build
-import androidx.annotation.RequiresApi
 
 
 internal fun <T : Any> T?.notNull(f: (it: T) -> Unit) {

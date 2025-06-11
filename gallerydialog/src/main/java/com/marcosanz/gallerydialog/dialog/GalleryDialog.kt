@@ -1,13 +1,12 @@
 package com.marcosanz.gallerydialog.dialog
 
 import android.app.Dialog
+import android.content.Context
 import android.content.pm.ActivityInfo
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +15,9 @@ import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.annotation.MenuRes
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.drawable.toDrawable
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -122,7 +123,7 @@ class GalleryDialog() : DialogFragment() {
         super.onCreate(savedInstanceState)
         postponeEnterTransition(1000L, TimeUnit.MILLISECONDS)
 
-        setStyle(STYLE_NORMAL, R.style.GalleryDialogTheme)
+        setStyle(STYLE_NO_TITLE, R.style.GalleryDialogTheme)
 
         // 1. Image list
         images = arguments?.getParcelableArrayListCompat(ARG_IMAGES, Image::class.java)?.toList()
@@ -152,7 +153,7 @@ class GalleryDialog() : DialogFragment() {
         return super.onCreateDialog(savedInstanceState).also {
             it.window?.let { wdw ->
                 wdw.requestFeature(Window.FEATURE_NO_TITLE)
-                wdw.setBackgroundDrawable(ColorDrawable(Color.BLACK))
+                wdw.setBackgroundDrawable(Color.BLACK.toDrawable())
                 wdw.setLayout(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT
@@ -168,7 +169,7 @@ class GalleryDialog() : DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = DlgGalleryBinding.inflate(inflater, null, false)
+        binding = DlgGalleryBinding.inflate(inflater, container, false)
 
         // I. Config max alt lines
         binding.tvText.maxLines = maxAltLines
@@ -205,12 +206,12 @@ class GalleryDialog() : DialogFragment() {
             dismiss()
         }
 
+        binding.btMore.isVisible =
+            options.isDownloadEnabled || !options.fileProviderAuthorities.isNullOrEmpty()
+
         // Button more / expanded options
         binding.btMore.setOnClickListener { v ->
-            if (options.fileProviderAuthorities != null)
-                showMenu(v, R.menu.popop_menu)
-            else
-                showMenu(v, R.menu.popop_menu_no_share)
+            showMenu(v, R.menu.popop_menu)
         }
 
         // Button rotation
@@ -292,9 +293,15 @@ class GalleryDialog() : DialogFragment() {
 
 
     private fun showMenu(v: View, @MenuRes menuRes: Int) {
-        val popup = PopupMenu(requireContext(), v)
+        val wrapperContext: Context = ContextThemeWrapper(v.context, R.style.GalleryPopupTheme)
+        val popup = PopupMenu(wrapperContext, v)
 
         popup.menuInflater.inflate(menuRes, popup.menu)
+
+        if (options.fileProviderAuthorities.isNullOrEmpty())
+            popup.menu.removeItem(R.id.menu_share)
+        if (!options.isDownloadEnabled)
+            popup.menu.removeItem(R.id.menu_save)
 
         popup.setOnMenuItemClickListener { item ->
             when (item.itemId) {
@@ -304,15 +311,14 @@ class GalleryDialog() : DialogFragment() {
 
             true
         }
-
-        popup.setOnDismissListener {
-            Log.i(TAG, "MENU DISMISS")
-        }
         popup.show()
     }
 
     private fun onClickShare() {
-        context?.loadDrawable(images[binding.viewpager.currentItem], errorDrawable = options.errorDrawable) { bitmap ->
+        context?.loadDrawable(
+            images[binding.viewpager.currentItem],
+            errorDrawable = options.errorDrawable
+        ) { bitmap ->
             val shareMsg = options.messageSharing
             bitmap?.shareImage(requireContext(), options.fileProviderAuthorities!!, shareMsg)
         }
@@ -325,7 +331,10 @@ class GalleryDialog() : DialogFragment() {
         if (savedDrawable != null)
             savedDrawable.toBitmap().saveToPictures()
         else
-            context?.loadDrawable(images[binding.viewpager.currentItem],errorDrawable = options.errorDrawable) { bitmap ->
+            context?.loadDrawable(
+                images[binding.viewpager.currentItem],
+                errorDrawable = options.errorDrawable
+            ) { bitmap ->
                 bitmap.saveToPictures()
             }
     }
@@ -391,6 +400,8 @@ class GalleryDialog() : DialogFragment() {
         }
     }
 
+    override fun getTheme(): Int = R.style.GalleryDialogTheme
+
 
     override fun show(manager: FragmentManager, tag: String?) {
         if (manager.fragments.any { it is GalleryDialog || it is Gallery360Dialog })
@@ -408,6 +419,7 @@ class GalleryDialog() : DialogFragment() {
         private var messageDownloading: String? = null
         private var messageSuccesfulDownload: String? = null
         private var messageErrorDownload: String? = null
+        private var isDownloadEnabled: Boolean = true
 
         @DrawableRes
         private var errorDrawable: Int? = null
@@ -421,10 +433,10 @@ class GalleryDialog() : DialogFragment() {
             ) =
                 Builder(
                     images =
-                    urls?.map {
-                        val index = urls.indexOf(it)
-                        Image.URL(alt = alts?.getOrNull(index), url = it)
-                    } ?: emptyList(),
+                        urls?.map {
+                            val index = urls.indexOf(it)
+                            Image.URL(alt = alts?.getOrNull(index), url = it)
+                        } ?: emptyList(),
                     initialPosition = initialPosition
                 )
 
@@ -442,10 +454,10 @@ class GalleryDialog() : DialogFragment() {
             ) =
                 Builder(
                     images =
-                    drawables?.map {
-                        val index = drawables.indexOf(it)
-                        Image.Drawable(alt = alts?.getOrNull(index), drawable = it)
-                    } ?: emptyList(),
+                        drawables?.map {
+                            val index = drawables.indexOf(it)
+                            Image.Drawable(alt = alts?.getOrNull(index), drawable = it)
+                        } ?: emptyList(),
                     initialPosition = initialPosition
                 )
 
@@ -461,10 +473,10 @@ class GalleryDialog() : DialogFragment() {
                 initialPosition: Int = 0
             ) = Builder(
                 images =
-                uris?.map {
-                    val index = uris.indexOf(it)
-                    Image.URI(alt = alts?.getOrNull(index), uri = it)
-                } ?: emptyList(),
+                    uris?.map {
+                        val index = uris.indexOf(it)
+                        Image.URI(alt = alts?.getOrNull(index), uri = it)
+                    } ?: emptyList(),
                 initialPosition = initialPosition
             )
 
@@ -497,6 +509,10 @@ class GalleryDialog() : DialogFragment() {
             this.messageErrorDownload = messageErrorDownload
         }
 
+        fun setIsDownloadEnabled(isDownloadEnabled: Boolean) = this.apply {
+            this.isDownloadEnabled = isDownloadEnabled
+        }
+
         /**
          * Sets the drawable to display when loading fails
          */
@@ -521,6 +537,7 @@ class GalleryDialog() : DialogFragment() {
                 messageSuccessfulDownload = messageSuccesfulDownload,
                 messageErrorDownload = messageErrorDownload,
                 errorDrawable = errorDrawable,
+                isDownloadEnabled = isDownloadEnabled,
                 rotation = allowRotation
             )
         )
